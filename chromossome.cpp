@@ -48,3 +48,12 @@ int chromossome::calcFitness(){
 
 	return fitness;
 }
+
+void chromossome::setGene(int i, char c){
+	this->stringc[i]=c;
+	return;
+}
+
+char chromossome::getGene(int i){
+	return (this->getString())[i];
+}

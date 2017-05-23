@@ -21,5 +21,7 @@ class chromossome{
 		unsigned int getFitness();
 		void setFitness(int fitness);
 		int calcFitness();
+		void setGene(int i, char c);
+		char getGene(int i);
 };
 
