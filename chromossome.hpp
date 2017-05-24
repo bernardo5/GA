@@ -18,10 +18,12 @@ class chromossome{
 		void printChromossome();
 		//static std::ostream & operator<<( std::ostream & o, const chromossome & s );
 		char * getString() const;
+		char * getStringc();
 		unsigned int getFitness();
 		void setFitness(int fitness);
 		int calcFitness();
 		void setGene(int i, char c);
 		char getGene(int i);
+		void mutate();
 };
 

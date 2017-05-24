@@ -21,10 +21,14 @@ void chromossome::printChromossome(){
 }
 
 char * chromossome::getString() const{
-	string x=string((this->stringc))+"with fitness: "+to_string(fitness);
+	string x=string((this->stringc))+" with fitness: "+to_string(fitness);
 	char*y=new char [x.length()+1];
 	strcpy(y, x.c_str());
 	return y;
+}
+
+char * chromossome::getStringc(){
+	return this->stringc;
 }
 
 unsigned int chromossome::getFitness(){
@@ -56,4 +60,25 @@ void chromossome::setGene(int i, char c){
 
 char chromossome::getGene(int i){
 	return (this->getString())[i];
+}
+
+void chromossome::mutate(){
+	double randomnumber;
+	char gene;
+	for (int i = 0; i < strlen(this->getStringc()); i++) {
+		randomnumber=((double) rand() / (RAND_MAX));
+		//cout<<"random number for mutation: "+to_string(randomnumber)+"\n";
+        if (randomnumber <= MUTATIONRATE) {
+        	cout<<"\nString was "+string(this->getString())+" in "+to_string(i)+"position\n";
+        	cout<<"\nmutated "+to_string(i)+" position\n";
+            // Create random gene
+           /* gene = (std::rand() % 91) + 32;
+            cout<<"\ngenerated gene: "+to_string(gene)+"\n";
+            this->setGene(i, gene);*/
+            gene=(char)(std::rand() % 91) + 32;
+            this->stringc[i] = gene;
+            cout<<"\nString now "+string(this->getString())+" and new char is "+to_string((char)gene)+"\n";
+        }
+    }
+	return;
 }

@@ -9,7 +9,7 @@ population::population(){
 
 	chromossome *individual;
 	ChromoPopulation.clear();
-	std::srand(std::time(0));
+	//std::srand(std::time(0));
 	for(int i=0; i<this->population_size; i++){
 		individual = new chromossome(string(GA_TARGET).length());
 		ChromoPopulation.push_back(*individual);
@@ -130,11 +130,14 @@ void population::evolvePop(){
 
     newPop.printPopulation();
 
-      /*  // Mutate population
-        for (int i = elitismOffset; i < newPopulation.size(); i++) {
-            mutate(newPopulation.getIndividual(i));
-        }
+    //mutate population
+    for_each(newPop.begin(), newPop.end(), []( chromossome & n)
+		{n.mutate();});
 
-        return newPopulation;*/
+    cout<<"\n --------------------------------------------------------------- \n";
+
+    newPop.printPopulation();
+
+       // return newPopulation;
 	return;
 }
