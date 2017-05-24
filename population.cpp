@@ -109,13 +109,12 @@ chromossome population::crossover(chromossome a, chromossome b){
         return *newSol;
 }
 
-
 void population::evolvePop(){
 	//by default it is considered eleitism
 	population newPop=new population(true);
 	//initialize new population with fitest member of previous pop
 	newPop.addChromossome(this->getElement(0));
-	srand(time(0));
+	//srand(time(0));
 	//evolve population through crossover
 	for (int i = 1; i < this->getSize(); i++) {
         chromossome indiv1 = this->tournamentSelection();
@@ -127,9 +126,9 @@ void population::evolvePop(){
         chromossome newIndiv = this->crossover(indiv1, indiv2);
         newPop.addChromossome(newIndiv);
     }
-    /*cout<<"\n --------------------------------------------------------------- \n";
+    cout<<"\n --------------------------------------------------------------- \n";
 
-    newPop.printPopulation();*/
+    newPop.printPopulation();
 
       /*  // Mutate population
         for (int i = elitismOffset; i < newPopulation.size(); i++) {

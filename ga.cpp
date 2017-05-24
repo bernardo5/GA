@@ -8,6 +8,7 @@
 using namespace std;
 
 int main(){
+	srand(time(0));
 	population *pop=new population();
 	//pop->printPopulation();
 	cout<<"First string fitness is: "+to_string((pop->getElement(0)).calcFitness())+"\n";
