@@ -21,6 +21,7 @@ class population{
 		void addChromossome(chromossome individual);
 		chromossome tournamentSelection();
 		chromossome crossover(chromossome a, chromossome b);
-
+		void mutate();
+		vector<chromossome> getList();
 		void evolvePop();
 };

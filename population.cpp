@@ -109,6 +109,16 @@ chromossome population::crossover(chromossome a, chromossome b){
         return *newSol;
 }
 
+void population::mutate(){
+	for_each(ChromoPopulation.begin(), ChromoPopulation.end(), []( chromossome & n)
+		{n.mutate();});
+	return;
+}
+
+vector<chromossome> population::getList(){
+	return this->ChromoPopulation;
+}
+
 void population::evolvePop(){
 	//by default it is considered eleitism
 	population newPop=new population(true);
@@ -126,18 +136,19 @@ void population::evolvePop(){
         chromossome newIndiv = this->crossover(indiv1, indiv2);
         newPop.addChromossome(newIndiv);
     }
-    cout<<"\n --------------------------------------------------------------- \n";
+   // cout<<"\n --------------------------------------------------------------- \n";
 
-    newPop.printPopulation();
+   // newPop.printPopulation();
 
     //mutate population
-    for_each(newPop.begin(), newPop.end(), []( chromossome & n)
-		{n.mutate();});
+    newPop.mutate();
 
-    cout<<"\n --------------------------------------------------------------- \n";
+   // cout<<"\n --------------------------------------------------------------- \n New Pop:\n\n";
 
-    newPop.printPopulation();
+    //newPop.printPopulation();
+   // cout<<"\n --------------------------------------------------------------- \n Final Pop:\n\n";
 
+    this->ChromoPopulation=newPop.getList();
        // return newPopulation;
 	return;
 }
