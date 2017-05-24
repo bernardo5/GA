@@ -13,14 +13,17 @@ int main(){
 	//pop->printPopulation();
 	//cout<<"First string fitness is: "+to_string((pop->getElement(0)).calcFitness())+"\n";
 	pop->calcPopFitness();
-	//cout<<"\n ---------------------------------------------------------------- \n";
-	//pop->printPopulation();
-	//cout<<"\n ---------------------------------------------------------------- \n";
 	pop->popSort();
-	//pop->printPopulation();
-	//cout<<"\n ---------------------------------------------------------------- \n";
-	pop->evolvePop();
-	//pop->printPopulation();
+	int i=1;
+	while((pop->getElement(0).getFitness())!=0){
+		pop->evolvePop();
+		pop->calcPopFitness();
+		pop->popSort();
+		cout<<"\nBest string fit in ("+to_string(i)+") iteration: "+string(pop->getElement(0).getStringc())+"\n";
+		i++;
+	}
+
+	cout<<"\nGA algorithms work!\n";
 	
 	return 0;
 }
