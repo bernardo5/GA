@@ -63,23 +63,23 @@ void population::addChromossome(chromossome individual){
 chromossome population::tournamentSelection(){
 	//initiate population for tournament
 	population tournamentPop = new population(true);
-	srand(time(0));
+	
 	for (int i = 0; i < TOURNAMENTSIZE; i++) {
         int randomId = (int) (std::rand() % this->getSize());
-        cout<<"\n";
+       /* cout<<"\n";
         cout<<"Generated random integer is: "+to_string(randomId);
-		cout<<"\n";
+		cout<<"\n";*/
         
         tournamentPop.addChromossome(this->getElement(randomId));
     }
-    cout<<"\n _____________________________________\n Population tournament:\n\n";
+    /*cout<<"\n _____________________________________\n Population tournament:\n\n";
     tournamentPop.printPopulation();
-    cout<<"\n _____________________________________\n";
+    cout<<"\n _____________________________________\n";*/
     // Get the fittest
     tournamentPop.calcPopFitness();
     tournamentPop.popSort();
-    cout<<"\nFitest is: "+string(tournamentPop.getElement(0).getString())+"\n";
-    cout<<"\n _____________________________________\n";
+    /*cout<<"\nFitest is: "+string(tournamentPop.getElement(0).getString())+"\n";
+    cout<<"\n _____________________________________\n";*/
     return tournamentPop.getElement(0);
 }
 
@@ -92,7 +92,7 @@ chromossome population::crossover(chromossome a, chromossome b){
 	int size=string(GA_TARGET).length();
 	chromossome *newSol = new chromossome(size);
         // Loop through genes
-	srand(time(0));
+	//srand(time(0));
         for (int i = 0; i < size; i++) {
             // Crossover
             int randomnumber=(std::rand()%2);
@@ -115,17 +115,21 @@ void population::evolvePop(){
 	population newPop=new population(true);
 	//initialize new population with fitest member of previous pop
 	newPop.addChromossome(this->getElement(0));
-	
+	srand(time(0));
 	//evolve population through crossover
 	for (int i = 1; i < this->getSize(); i++) {
         chromossome indiv1 = this->tournamentSelection();
+         /*cout<<"\nTournament 1: "+string(indiv1.getString())+"\n";
+   		 cout<<"\n _____________________________________\n";*/
         chromossome indiv2 = this->tournamentSelection();
+        /*cout<<"\nTournament 2: "+string(indiv2.getString())+"\n";
+   		 cout<<"\n _____________________________________\n";*/
         chromossome newIndiv = this->crossover(indiv1, indiv2);
         newPop.addChromossome(newIndiv);
     }
-    cout<<"\n --------------------------------------------------------------- \n";
+    /*cout<<"\n --------------------------------------------------------------- \n";
 
-    newPop.printPopulation();
+    newPop.printPopulation();*/
 
       /*  // Mutate population
         for (int i = elitismOffset; i < newPopulation.size(); i++) {
