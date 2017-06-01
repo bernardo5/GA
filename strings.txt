@@ -1,0 +1,8 @@
+Bloqueou:
+"Apos uma vida de trabalho arduo e empenhado, a D.Aurilia, zelosa e exemplar funcionaria da 5 reparticao do contencioso das Financas do Municipio de Vila Nova a Coelheira, com uma vida dedicada a administracao publica, reformou-se e pretende determinar o seu plano de poupancas e gastos optimos durante um intervalo de tempo que comeca no instante actual e acaba num tempo futuro T. A D.Aurilia nao tem nenhuma outra fonte de rendimento para alem dos juros das suas poupancas. Sendo x1(t) o valor das poupancas no instante t, esta variavel satisfaz a equacao diferencial."
+
+Corre fluido mas estrangula:
+"A D.Aurilia nao tem nenhuma outra fonte de rendimento para alem dos juros das suas poupancas. Sendo x1(t) o valor das poupancas no instante t, esta variavel satisfaz a equacao diferencial." 
+
+Resultado ao fim de quase 5000 iteracoes:
+"A D.Aurilia nao tem nenhuma outra fonte de rendimento para alem dos juros das suas poupancas."
