@@ -17,7 +17,7 @@ int main(){
 	auto start_time = std::chrono::high_resolution_clock::now();
 	//start GA
 	population *pop=new population();
-	
+	//pop->printRates();
 	pop->calcPopFitness();
 	
 	pop->printPopulation();

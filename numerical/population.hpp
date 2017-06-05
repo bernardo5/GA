@@ -3,6 +3,8 @@
 #include <vector>
 #include "chromossome.hpp"
 #include <algorithm>
+#include <list>
+#include <string.h>
 using namespace std;
 
 class population{

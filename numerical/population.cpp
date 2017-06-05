@@ -36,7 +36,6 @@ void population::printRates(){
         s=s+", r["+to_string(j+1)+"]="+to_string(this->returnRates[j])+" ";
     s=s+"\n";
 	cout<<s;
-	return;
 }	
 
 int population::getSize(){
@@ -54,10 +53,16 @@ chromossome population::getElement(int position){
 }
 */
 void population::calcPopFitness(){
-	for_each(ChromoPopulation.begin(), ChromoPopulation.end(), []( chromossome & n)
-		{n.setFitness(n.calcFitness());});
+	for_each(ChromoPopulation.begin(), ChromoPopulation.end(), [=]( chromossome & n)
+		{
+			double inner=0;
+			int*v=n.getValues();
+			for(int j=0; j<NUMBERVARIABLES; j++)
+				inner+=(v[j]*(this->returnRates[j]));
+			n.setFitness(inner);});
 	return;
 }
+//std::inner_product(std::begin(n.getValues()), std::end(n.getValues()), std::begin(returnRates), 0.0)
 /*
 void population::popSort(){
 	sort(ChromoPopulation.begin(), ChromoPopulation.end(), [](chromossome &a, chromossome &b){

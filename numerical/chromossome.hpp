@@ -18,8 +18,9 @@ class chromossome{
 		chromossome();
 		void printChromossome();
 		unsigned int getFitness();
+		int* getValues();
 		void setFitness(int fitness);
-		int calcFitness();
+		//int calcFitness();
 		void setGene(int i, int gene);
 		char getGene(int i);
 		void mutate();
