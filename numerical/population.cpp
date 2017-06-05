@@ -13,6 +13,10 @@ population::population(){
 		ChromoPopulation.push_back(*individual);
 		delete individual;
 	}
+	
+	this->returnRates=new double[NUMBERVARIABLES];
+	for (int j = 0; j < NUMBERVARIABLES; j++)
+        (this->returnRates)[j] = (((double) std::rand()/(RAND_MAX)));
 }
 
 population::population(bool newIteration){

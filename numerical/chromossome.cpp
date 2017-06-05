@@ -6,16 +6,15 @@ using namespace std;
 
 chromossome::chromossome(){
 	this->fitness=0;
-	this->values=new int[9];
+	this->values=new int[NUMBERVARIABLES];
 
 	
     int j;
-	for (j = 0; j < NUMBERVARIABLES; j++)
-        this->values[j] = (std::rand() % 1024);
-    if(NUMBERVARIABLES<8){
-		for (int i = j; i < 9; i++)
-        this->values[j] = 0;
-	}
+    int I=MAXINVESTMENT;
+	for (j = 0; j < NUMBERVARIABLES; j++){
+        this->values[j] = (std::rand() % I);
+        I=I-this->values[j];
+    }
 }
 
 /*void chromossome::printChromossome(){

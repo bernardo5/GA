@@ -9,6 +9,7 @@ class population{
 	private:
 		int population_size;
 		vector<chromossome> ChromoPopulation;
+		double * returnRates;
 	public:
 		population();
 		population(bool newIteration);
