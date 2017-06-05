@@ -1,8 +1,8 @@
-#include <string>
+#include <cstring>
 #include <stdlib.h>
 #include <vector>
 #include "chromossome.hpp"
-
+#include <algorithm>
 using namespace std;
 
 class population{

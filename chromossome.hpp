@@ -3,9 +3,9 @@
 
 //include libraries
 #include <iostream>
-#include <string>
+#include <cstring>
 #include <ctime>
-
+#include <algorithm>
 using namespace std;
 
 class chromossome{
