@@ -30,6 +30,15 @@ population::population(bool newIteration){
 	}
 }
 
+void population::printRates(){
+	string s="Rates are ";
+	for (int j = 0; j < NUMBERVARIABLES; j++)
+        s=s+", r["+to_string(j+1)+"]="+to_string(this->returnRates[j])+" ";
+    s=s+"\n";
+	cout<<s;
+	return;
+}	
+
 int population::getSize(){
 	return population_size;
 }

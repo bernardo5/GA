@@ -13,6 +13,7 @@ class population{
 	public:
 		population();
 		population(bool newIteration);
+		void printRates();
 		int getSize();
 		void printPopulation();
 		chromossome getElement(int position);
