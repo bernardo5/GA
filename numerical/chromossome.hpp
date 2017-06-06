@@ -18,12 +18,11 @@ class chromossome{
 		unsigned int fitness;
 		chromossome();
 		bool operator<(const chromossome& other) const {
-			return fitness > other.fitness;
+			return fitness < other.fitness;
 		}
-		//void printChromossome();
 		unsigned int getFitness();
 		int* getValues();
-		void setFitness(int fitness);
+		void calcFitness();
 		void setGene(int i, int gene);
 		int getGene(int i);
 		void mutate();

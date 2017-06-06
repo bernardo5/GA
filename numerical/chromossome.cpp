@@ -10,37 +10,22 @@ chromossome::chromossome(){
 
 	
     int j;
-    int I=MAXINVESTMENT;
-	for (j = 0; j < (NUMBERVARIABLES-1); j++){
-        this->values[j] = (std::rand() % I);
-        I=I-this->values[j];
+	for (j = 0; j < NUMBERVARIABLES; j++){
+        this->values[j] = (std::rand() % 1024);
     }
-    this->values[j]=I;
-    
 }
 
-/*void chromossome::printChromossome(){
-	cout<<(string(this->stringc)+"\n");
-	return;
-}
-
-char * chromossome::getString() const{
-	string x=string((this->stringc))+" with fitness: "+to_string(fitness);
-	char*y=new char [x.length()+1];
-	strcpy(y, x.c_str());
-	return y;
-}
-
-char * chromossome::getStringc(){
-	return this->stringc;
-}
-*/
 unsigned int chromossome::getFitness(){
 	return this->fitness;
 }
 
-void chromossome::setFitness(int fitness){
-	this->fitness=fitness;
+void chromossome::calcFitness(){
+	int result=0;
+	for(int i=0; i<NUMBERVARIABLES; i++){
+		result+=values[i]*(i+1);
+	}
+	result-=1024;
+	fitness=result;
 	return;
 }
 
@@ -69,13 +54,15 @@ int chromossome::getGene(int i){
 }
 
 void chromossome::mutate(){
-	 int I=MAXINVESTMENT;
-	int i;
-	for (i = 0; i < (NUMBERVARIABLES-1); i++) {
-		this->values[i] = (std::rand() % I);
-        I=I-this->values[i];
+	double randomnumber;
+	char gene;
+	for (int i = 0; i < NUMBERVARIABLES; i++) {
+		randomnumber=((double) rand() / (RAND_MAX));
+        if (randomnumber <= MUTATIONRATE) {
+            gene=(std::rand() % 1024);
+            this->values[i] = gene;
+        }
     }
-    this->values[i]=I;
 	return;
 }
 

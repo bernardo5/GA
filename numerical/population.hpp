@@ -13,12 +13,10 @@ class population{
 	private:
 		int population_size;
 		vector<chromossome> ChromoPopulation;
-		double * returnRates;
 		static bool Compare (chromossome i, chromossome j) {return ( i.getFitness() < j.getFitness() ); }
 	public:
 		population();
-		population(bool newIteration, double*ReturnRates);
-		void printRates();
+		population(bool newIteration);
 		int getSize();
 		void printPopulation();
 		chromossome getElement(int position);

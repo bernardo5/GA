@@ -14,31 +14,17 @@ population::population(){
 		ChromoPopulation.push_back(*individual);
 		delete individual;
 	}
-	
-	this->returnRates=new double[NUMBERVARIABLES];
-	for (int j = 0; j < NUMBERVARIABLES; j++)
-        (this->returnRates)[j] = (((double) std::rand()/(RAND_MAX)));
 }
 
-population::population(bool newIteration, double*ReturnRates){
+population::population(bool newIteration){
 	if(newIteration){
 		this->population_size=GA_POPSIZE;
 		ChromoPopulation.clear();
-		this->returnRates=ReturnRates;
-		//no individual push to vector
 	}else{
 		cout<<"Unspecified context\n";
 		exit(0);
 	}
 }
-
-void population::printRates(){
-	string s="Rates are ";
-	for (int j = 0; j < NUMBERVARIABLES; j++)
-        s=s+", r["+to_string(j+1)+"]="+to_string(this->returnRates[j])+" ";
-    s=s+"\n";
-	cout<<s;
-}	
 
 int population::getSize(){
 	return population_size;
@@ -56,12 +42,7 @@ chromossome population::getElement(int position){
 
 void population::calcPopFitness(){
 	for_each(ChromoPopulation.begin(), ChromoPopulation.end(), [=]( chromossome & n)
-		{
-			double inner=0;
-			int*v=n.getValues();
-			for(int j=0; j<NUMBERVARIABLES; j++)
-				inner+=(v[j]*(this->returnRates[j]));
-			n.setFitness(inner);});
+		{n.calcFitness();});
 	return;
 }
 
@@ -77,7 +58,7 @@ void population::addChromossome(chromossome individual){
 
 chromossome population::tournamentSelection(){
 	//initiate population for tournament
-	population *tournamentPop = new population(true, returnRates);
+	population *tournamentPop = new population(true);
 	
 	for (int i = 0; i < TOURNAMENTSIZE; i++) {
         int randomId = (int) (std::rand() % GA_POPSIZE);
@@ -96,34 +77,21 @@ chromossome population::crossover(chromossome a, chromossome b){
 	int size=NUMBERVARIABLES;
 	int sum=1025;
 	chromossome *newSol = new chromossome();
-        // Loop through genes
-       // cout<<"Sera?\n";
-    while(sum>MAXINVESTMENT){
-		//cout<<"matou\n";
-        for (int i = 0; i < size; i++) {
-            // Crossover
-            int randomnumber=(std::rand()%2);
-            if ( randomnumber<= UNIFORMRATE){
-				newSol->setGene(i, a.getGene(i));	
-			}else{
-				newSol->setGene(i, b.getGene(i));
-            }
-        }
-        sum=0;
-        for (int j = 0; j < size; j++)sum+=newSol->getGene(j);
-        //cout<<"Soma e : "+to_string(sum)+"\n";
-    }
+    for (int i = 0; i < size; i++) {
+       // Crossover
+       int randomnumber=(std::rand()%2);
+       if ( randomnumber<= UNIFORMRATE){
+			newSol->setGene(i, a.getGene(i));	
+	   }else{
+			newSol->setGene(i, b.getGene(i));
+       }
+     }
     return *newSol;
 }
 
 void population::mutate(){
 	for_each(ChromoPopulation.begin(), ChromoPopulation.end(), []( chromossome & n)
-		{
-			double randomnumber=((double) rand() / (RAND_MAX));
-			if (randomnumber <= MUTATIONRATE) {
-				n.mutate();
-			}
-		});
+		{n.mutate();});
 	return;
 }
 
@@ -134,7 +102,7 @@ vector<chromossome> population::getList(){
 void population::evolvePop(){
 	//cout<<"\n\n--------------------------\n Now evolving...\n\n";
 	//by default it is considered eleitism
-	population *newPop=new population(true, returnRates);
+	population *newPop=new population(true);
 	//initialize new population with fitest member of previous pop
 	newPop->addChromossome(this->getElement(0));
 	//evolve population through crossover
