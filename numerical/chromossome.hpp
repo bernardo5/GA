@@ -12,15 +12,18 @@ using namespace std;
 class chromossome{
 	private:
 		int * values;
-		unsigned int fitness;
+		
 
 	public:
+		unsigned int fitness;
 		chromossome();
+		bool operator<(const chromossome& other) const {
+			return fitness < other.fitness;
+		}
 		void printChromossome();
 		unsigned int getFitness();
 		int* getValues();
 		void setFitness(int fitness);
-		//int calcFitness();
 		void setGene(int i, int gene);
 		char getGene(int i);
 		void mutate();

@@ -23,8 +23,9 @@ int main(){
 	pop->printPopulation();
 	
 	pop->printRates();
-	/*pop->popSort();
-	while((pop->getElement(0).getFitness())>=threshold){
+	pop->popSort();
+	pop->printPopulation();
+	/*while((pop->getElement(0).getFitness())>=threshold){
 		pop->evolvePop();
 		pop->calcPopFitness();
 		pop->popSort();

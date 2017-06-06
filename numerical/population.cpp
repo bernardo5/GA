@@ -1,7 +1,8 @@
 #include "population.hpp"
-
+#include <tr1/functional>
 
 using namespace std;
+using namespace std::tr1::placeholders;
 
 population::population(){
 	this->population_size=GA_POPSIZE;
@@ -62,13 +63,12 @@ void population::calcPopFitness(){
 			n.setFitness(inner);});
 	return;
 }
-//std::inner_product(std::begin(n.getValues()), std::end(n.getValues()), std::begin(returnRates), 0.0)
-/*
-void population::popSort(){
-	sort(ChromoPopulation.begin(), ChromoPopulation.end(), [](chromossome &a, chromossome &b){
-        return a.getFitness() < b.getFitness();});
-}
 
+
+void population::popSort(){
+	sort(ChromoPopulation.begin(), ChromoPopulation.end());
+}
+/*
 void population::addChromossome(chromossome individual){
 	ChromoPopulation.push_back(individual);
 	return;

@@ -47,15 +47,7 @@ int* chromossome::getValues(){
 }	
 
 
-/*int chromossome::calcFitness(){
-	int fitness=0;
-	//fitness function is:
-	//f (x) = ((a + 2b + 3c + 4d + (e*f+g-h+i)) - 30)
 
-	fitness=values[0]+(2*values[1])+(3*values[2])+(4*values[3])+(values[4]*values[5]+values[6]-values[7]+values[8]);
-
-	return fitness;
-}*/
 
 string chromossome::getString() const{
 	string s="Fitness is "+to_string(fitness);
