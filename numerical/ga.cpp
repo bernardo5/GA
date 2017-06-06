@@ -11,7 +11,7 @@ using namespace std;
 int main(){
 	int i=1;
 	int old_fitness=0;
-	float threshold=0.05;
+	float threshold=0.001;
 	//initialize rand parameter
 	srand(time(0));
 	//start counting clock
@@ -25,9 +25,11 @@ int main(){
 	
 	
 	pop->popSort();
+	
 	//pop->printPopulation();
-	//return 0;
-	do{
+	
+	while(true){
+		
 		old_fitness=pop->getElement(0).getFitness();
 		//printf("%d\n", pop->getElement(0).getFitness());
 		//pop->printPopulation();
@@ -35,9 +37,12 @@ int main(){
 	//	pop->printPopulation();
 		pop->calcPopFitness();
 		pop->popSort();
-		cout<<"\nBest string fit in ("+to_string(i)+") iteration: "+string(pop->getElement(0).getString())+" || fitness:"+to_string(pop->getElement(0).getFitness())+"\n";
+		cout<<"\nBest string fit in ("+to_string(i)+") iteration: "+string(pop->getElement(0).getString())+" || fitness:"+to_string(pop->getElement(0).getFitness())+"\n"+"Return Vectors: ";
+		pop->printRates();
+		cout<<"\n";
 		i++;
-	}while(((float)(((((float)pop->getElement(0).getFitness())-(float)old_fitness)+1)/(float)(pop->getElement(0).getFitness())))<=threshold);
+	}
+	//pop->printPopulation();
 	pop->printRates();
 	cout<<"\nGA algorithms work!\n";
 	//end of GA algorithm and stop counting time

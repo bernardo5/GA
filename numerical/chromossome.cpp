@@ -11,10 +11,12 @@ chromossome::chromossome(){
 	
     int j;
     int I=MAXINVESTMENT;
-	for (j = 0; j < NUMBERVARIABLES; j++){
+	for (j = 0; j < (NUMBERVARIABLES-1); j++){
         this->values[j] = (std::rand() % I);
         I=I-this->values[j];
     }
+    this->values[j]=I;
+    
 }
 
 /*void chromossome::printChromossome(){
@@ -67,19 +69,13 @@ int chromossome::getGene(int i){
 }
 
 void chromossome::mutate(){
-	double randomnumber;
-	int gene;
-	for (int i = 0; i < NUMBERVARIABLES; i++) {
-		randomnumber=((double) rand() / (RAND_MAX));
-        if (randomnumber <= MUTATIONRATE) {
-			int other=0;
-			for (int j = 0;  j< NUMBERVARIABLES; j++)
-								if(j!=i) other+=values[j];
-			int range=MAXINVESTMENT-other;
-            gene=(std::rand() % range);
-            this->values[i] = gene;
-        }
+	 int I=MAXINVESTMENT;
+	int i;
+	for (i = 0; i < (NUMBERVARIABLES-1); i++) {
+		this->values[i] = (std::rand() % I);
+        I=I-this->values[i];
     }
+    this->values[i]=I;
 	return;
 }
 
