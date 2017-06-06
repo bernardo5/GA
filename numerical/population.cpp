@@ -67,15 +67,11 @@ chromossome population::tournamentSelection(){
     // Get the fittest
     tournamentPop->calcPopFitness();
     tournamentPop->popSort();
-    chromossome c=tournamentPop->getElement(0);
-    delete tournamentPop;
-    //cout<<string(c.getString())+"\n";
-    return c;
+    return tournamentPop->getElement(0);
 }
 
 chromossome population::crossover(chromossome a, chromossome b){
 	int size=NUMBERVARIABLES;
-	int sum=1025;
 	chromossome *newSol = new chromossome();
     for (int i = 0; i < size; i++) {
        // Crossover
@@ -100,7 +96,6 @@ vector<chromossome> population::getList(){
 }
 
 void population::evolvePop(){
-	//cout<<"\n\n--------------------------\n Now evolving...\n\n";
 	//by default it is considered eleitism
 	population *newPop=new population(true);
 	//initialize new population with fitest member of previous pop
@@ -108,21 +103,13 @@ void population::evolvePop(){
 	//evolve population through crossover
 	for (int i = 1; i < this->getSize(); i++) {
         chromossome indiv1 = this->tournamentSelection();
-       // cout<<"\n\n---------------------\nIndiv1\n";
-        //cout<<string(indiv1.getString())+"\n---------------\n";
         chromossome indiv2 = this->tournamentSelection();
-       // cout<<"\n\n---------------------\nIndiv2\n";
-       // cout<<string(indiv2.getString())+"\n---------------\n";
         chromossome newIndiv = this->crossover(indiv1, indiv2);
-       // cout<<"\n\n-------------------\nNew individual coming\n";
-        //cout<<string(newIndiv.getString())+"\n--------------------\n\n";
         newPop->addChromossome(newIndiv);
     }
     //mutate population
     newPop->mutate();
-    vector<chromossome> C=newPop->getList();
-    delete newPop;
-    this->ChromoPopulation=C;
+    this->ChromoPopulation=newPop->getList();
 	return;
 }
 
