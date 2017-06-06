@@ -17,7 +17,7 @@ class population{
 		static bool Compare (chromossome i, chromossome j) {return ( i.getFitness() < j.getFitness() ); }
 	public:
 		population();
-		population(bool newIteration);
+		population(bool newIteration, double*ReturnRates);
 		void printRates();
 		int getSize();
 		

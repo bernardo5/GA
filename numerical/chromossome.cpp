@@ -56,26 +56,30 @@ string chromossome::getString() const{
     s=s+"\n";
 	return s;
 }
-/*
-void chromossome::setGene(int i, char c){
-	this->stringc[i]=c;
+
+void chromossome::setGene(int i, int c){
+	this->values[i]=c;
 	return;
 }
 
-char chromossome::getGene(int i){
-	return (this->getString())[i];
+int chromossome::getGene(int i){
+	return this->values[i];
 }
 
 void chromossome::mutate(){
 	double randomnumber;
-	char gene;
-	for (int i = 0; i < strlen(this->getStringc()); i++) {
+	int gene;
+	for (int i = 0; i < NUMBERVARIABLES; i++) {
 		randomnumber=((double) rand() / (RAND_MAX));
         if (randomnumber <= MUTATIONRATE) {
-            gene=(char)(std::rand() % 91) + 32;
-            this->stringc[i] = gene;
+			int other=0;
+			for (int j = 0;  j< NUMBERVARIABLES; j++)
+								if(j!=i) other+=values[j];
+			int range=MAXINVESTMENT-other;
+            gene=(std::rand() % range);
+            this->values[i] = gene;
         }
     }
 	return;
 }
-*/
+

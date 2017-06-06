@@ -20,10 +20,11 @@ population::population(){
         (this->returnRates)[j] = (((double) std::rand()/(RAND_MAX)));
 }
 
-population::population(bool newIteration){
+population::population(bool newIteration, double*ReturnRates){
 	if(newIteration){
 		this->population_size=GA_POPSIZE;
 		ChromoPopulation.clear();
+		this->returnRates=ReturnRates;
 		//no individual push to vector
 	}else{
 		cout<<"Unspecified context\n";
@@ -48,11 +49,11 @@ void population::printPopulation(){
 													 i != (this->ChromoPopulation).end(); ++i)
     std::cout << i->getString()<<"\n";
 }
-/*
+
 chromossome population::getElement(int position){
 	return ChromoPopulation.at(position);
 }
-*/
+
 void population::calcPopFitness(){
 	for_each(ChromoPopulation.begin(), ChromoPopulation.end(), [=]( chromossome & n)
 		{
@@ -68,7 +69,7 @@ void population::calcPopFitness(){
 void population::popSort(){
 	sort(ChromoPopulation.begin(), ChromoPopulation.end());
 }
-/*
+
 void population::addChromossome(chromossome individual){
 	ChromoPopulation.push_back(individual);
 	return;
@@ -76,34 +77,40 @@ void population::addChromossome(chromossome individual){
 
 chromossome population::tournamentSelection(){
 	//initiate population for tournament
-	population tournamentPop = new population(true);
+	population *tournamentPop = new population(true, returnRates);
 	
 	for (int i = 0; i < TOURNAMENTSIZE; i++) {
-        int randomId = (int) (std::rand() % this->getSize());
-        tournamentPop.addChromossome(this->getElement(randomId));
+        int randomId = (int) (std::rand() % GA_POPSIZE);
+        tournamentPop->addChromossome(this->getElement(randomId));
     }
     // Get the fittest
-    tournamentPop.calcPopFitness();
-    tournamentPop.popSort();
-    return tournamentPop.getElement(0);
+    tournamentPop->calcPopFitness();
+    tournamentPop->popSort();
+    chromossome c=tournamentPop->getElement(0);
+    delete tournamentPop;
+    //cout<<string(c.getString())+"\n";
+    return c;
 }
 
 chromossome population::crossover(chromossome a, chromossome b){
-	int size=string(GA_TARGET).length();
-	chromossome *newSol = new chromossome(size);
+	int size=NUMBERVARIABLES;
+	chromossome *newSol = new chromossome();
         // Loop through genes
         for (int i = 0; i < size; i++) {
             // Crossover
             int randomnumber=(std::rand()%2);
             if ( randomnumber<= UNIFORMRATE) {
+				//cout<<"Got "+to_string(a.getGene(i))+"\n";
                 newSol->setGene(i, a.getGene(i));
+                //cout<<"Set "+to_string(newSol->getGene(i))+"\n";
             } else {
+               // cout<<"Got "+to_string(b.getGene(i))+"\n";
                 newSol->setGene(i, b.getGene(i));
+                //cout<<"Set "+to_string(newSol->getGene(i))+"\n";
             }
         }
-    chromossome *returnVect=newSol;
-    delete newSol;
-    return *returnVect;
+       // cout<<"Final sequence: \n"+newSol->getString()+"\n";
+    return *newSol;
 }
 
 void population::mutate(){
@@ -117,20 +124,29 @@ vector<chromossome> population::getList(){
 }
 
 void population::evolvePop(){
+	//cout<<"\n\n--------------------------\n Now evolving...\n\n";
 	//by default it is considered eleitism
-	population newPop=new population(true);
+	population *newPop=new population(true, returnRates);
 	//initialize new population with fitest member of previous pop
-	newPop.addChromossome(this->getElement(0));
+	newPop->addChromossome(this->getElement(0));
 	//evolve population through crossover
 	for (int i = 1; i < this->getSize(); i++) {
         chromossome indiv1 = this->tournamentSelection();
+       // cout<<"\n\n---------------------\nIndiv1\n";
+        //cout<<string(indiv1.getString())+"\n---------------\n";
         chromossome indiv2 = this->tournamentSelection();
+       // cout<<"\n\n---------------------\nIndiv2\n";
+       // cout<<string(indiv2.getString())+"\n---------------\n";
         chromossome newIndiv = this->crossover(indiv1, indiv2);
-        newPop.addChromossome(newIndiv);
+       // cout<<"\n\n-------------------\nNew individual coming\n";
+        //cout<<string(newIndiv.getString())+"\n--------------------\n\n";
+        newPop->addChromossome(newIndiv);
     }
     //mutate population
-    newPop.mutate();
-    this->ChromoPopulation=newPop.getList();
+    newPop->mutate();
+    vector<chromossome> C=newPop->getList();
+    delete newPop;
+    this->ChromoPopulation=C;
 	return;
 }
-*/
+

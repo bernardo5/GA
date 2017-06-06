@@ -20,12 +20,12 @@ class chromossome{
 		bool operator<(const chromossome& other) const {
 			return fitness < other.fitness;
 		}
-		void printChromossome();
+		//void printChromossome();
 		unsigned int getFitness();
 		int* getValues();
 		void setFitness(int fitness);
 		void setGene(int i, int gene);
-		char getGene(int i);
+		int getGene(int i);
 		void mutate();
 		string getString() const;
 };
