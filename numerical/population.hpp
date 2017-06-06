@@ -18,12 +18,8 @@ class population{
 	public:
 		population();
 		population(bool newIteration, double*ReturnRates);
-		//string getPop();
 		void printRates();
 		int getSize();
-		
-		//bool compare(chromossome&a, chromossome&b)const;
-		
 		void printPopulation();
 		chromossome getElement(int position);
 		void calcPopFitness();
