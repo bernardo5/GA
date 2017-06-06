@@ -48,7 +48,7 @@ void population::printPopulation(){
 	for (std::vector<chromossome>::const_iterator i = (this->ChromoPopulation).begin();
 													 i != (this->ChromoPopulation).end(); ++i)
     std::cout << i->getString()<<"\n";
-}
+}	
 
 chromossome population::getElement(int position){
 	return ChromoPopulation.at(position);

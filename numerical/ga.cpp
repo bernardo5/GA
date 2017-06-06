@@ -27,7 +27,7 @@ int main(){
 	pop->popSort();
 	
 	//pop->printPopulation();
-	
+	string s=pop->getElement(0).getString();
 	while(true){
 		
 		old_fitness=pop->getElement(0).getFitness();
@@ -37,9 +37,11 @@ int main(){
 	//	pop->printPopulation();
 		pop->calcPopFitness();
 		pop->popSort();
-		cout<<"\nBest string fit in ("+to_string(i)+") iteration: "+string(pop->getElement(0).getString())+" || fitness:"+to_string(pop->getElement(0).getFitness())+"\n"+"Return Vectors: ";
+		cout<<"\nBest string fit in ("+to_string(i)+") iteration: "+string(pop->getElement(0).getString())+"\n"+"Return Vectors: ";
 		pop->printRates();
 		cout<<"\n";
+		
+		cout<<"vs: "+s+"\n-----------------------------------\n";
 		i++;
 	}
 	//pop->printPopulation();

@@ -18,6 +18,7 @@ class population{
 	public:
 		population();
 		population(bool newIteration, double*ReturnRates);
+		//string getPop();
 		void printRates();
 		int getSize();
 		
