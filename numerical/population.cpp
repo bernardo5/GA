@@ -94,22 +94,39 @@ chromossome population::tournamentSelection(){
 
 chromossome population::crossover(chromossome a, chromossome b){
 	int size=NUMBERVARIABLES;
+	int sum=0;
 	chromossome *newSol = new chromossome();
         // Loop through genes
         for (int i = 0; i < size; i++) {
             // Crossover
             int randomnumber=(std::rand()%2);
             if ( randomnumber<= UNIFORMRATE) {
-				//cout<<"Got "+to_string(a.getGene(i))+"\n";
-                newSol->setGene(i, a.getGene(i));
-                //cout<<"Set "+to_string(newSol->getGene(i))+"\n";
-            } else {
-               // cout<<"Got "+to_string(b.getGene(i))+"\n";
-                newSol->setGene(i, b.getGene(i));
-                //cout<<"Set "+to_string(newSol->getGene(i))+"\n";
+				if((sum+a.getGene(i))<MAXINVESTMENT){
+					newSol->setGene(i, a.getGene(i));
+					sum+=a.getGene(i);
+				}else{
+					if((sum+b.getGene(i))<MAXINVESTMENT){
+						newSol->setGene(i, b.getGene(i));
+						sum+=b.getGene(i);
+					}else{
+						newSol->setGene(i, 0);
+					}
+				}		
+			} else {
+				if((sum+b.getGene(i))<MAXINVESTMENT){
+					newSol->setGene(i, b.getGene(i));
+					sum+=b.getGene(i);
+				}else{
+					if((sum+a.getGene(i))<MAXINVESTMENT){
+						newSol->setGene(i, a.getGene(i));
+						sum+=a.getGene(i);
+					}else{
+						newSol->setGene(i, 0);
+					}
+				}
+                
             }
         }
-       // cout<<"Final sequence: \n"+newSol->getString()+"\n";
     return *newSol;
 }
 

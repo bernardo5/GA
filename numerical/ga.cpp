@@ -25,6 +25,7 @@ int main(){
 	
 	pop->popSort();
 	//pop->printPopulation();
+	//return 0;
 	while((pop->getElement(0).getFitness())<=threshold){
 		//printf("%d\n", pop->getElement(0).getFitness());
 		//pop->printPopulation();
