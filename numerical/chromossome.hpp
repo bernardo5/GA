@@ -18,7 +18,7 @@ class chromossome{
 		unsigned int fitness;
 		chromossome();
 		bool operator<(const chromossome& other) const {
-			return fitness < other.fitness;
+			return fitness > other.fitness;
 		}
 		//void printChromossome();
 		unsigned int getFitness();
