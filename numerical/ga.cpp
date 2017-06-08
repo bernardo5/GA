@@ -13,10 +13,16 @@ void writeFile(int*finalSequence, string final_time){
 	std::ofstream outputFile;
 	outputFile.open("output.txt", std::ios_base::app);
 	//checkVerifications
-	for(int i=0; i<NUMBERVARIABLES; i++){
-		outputFile<<to_string(finalSequence[i])+"\t";	
-	}	
-	outputFile<<final_time+"\n";
+	if(outputFile.is_open()){
+		for(int i=0; i<NUMBERVARIABLES; i++){
+			outputFile<<to_string(finalSequence[i])+"\t";	
+		}	
+		outputFile<<final_time+"\n";
+		outputFile.close();
+	}else{		
+		cout<<"Error opening file\n";
+	}
+	
 	return;
 }	
 
