@@ -20,8 +20,13 @@ void writeFile(int*finalSequence, string final_time){
 	return;
 }	
 
-int main(){
+int main(int argc, char *argv[]){
 	int i=1;
+	int print=0;
+	
+	if ( argc < 2 ) print=1; 
+	
+	
 	//initialize rand parameter
 	srand(time(0));
 	//start counting clock
@@ -35,14 +40,14 @@ int main(){
 		pop->evolvePop();
 		pop->calcPopFitness();
 		pop->popSort();
-		cout<<"\nBest string fit in ("+to_string(i)+") iteration: "+string(pop->getElement(0).getString())+"\n";
+		if(print==1)cout<<"\nBest string fit in ("+to_string(i)+") iteration: "+string(pop->getElement(0).getString())+"\n";
 		i++;
 	}
-	cout<<"\nGA algorithms work!\n";
+	if(print==1)cout<<"\nGA algorithms work!\n";
 	//end of GA algorithm and stop counting time
 	auto end_time = std::chrono::high_resolution_clock::now();
 	auto time = end_time - start_time;
-	std::cout << "It took " <<
+	if(print==1)std::cout << "It took " <<
     std::chrono::duration_cast<std::chrono::milliseconds>(time).count() << " milliseconds to run.\n";
     writeFile(pop->getElement(0).getValues(), to_string(std::chrono::duration_cast<std::chrono::milliseconds>(time).count()));
 	return 0;
