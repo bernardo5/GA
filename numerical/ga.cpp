@@ -40,6 +40,6 @@ int main(){
 	auto end_time = std::chrono::high_resolution_clock::now();
 	auto time = end_time - start_time;
 	std::cout << "It took " <<
-    std::chrono::duration_cast<std::chrono::seconds>(time).count() << " seconds to run.\n";
+    std::chrono::duration_cast<std::chrono::milliseconds>(time).count() << " milliseconds to run.\n";
 	return 0;
 }
