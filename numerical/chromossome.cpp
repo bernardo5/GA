@@ -55,11 +55,11 @@ int chromossome::getGene(int i){
 
 void chromossome::mutate(){
 	double randomnumber;
-	char gene;
+	int gene;
 	for (int i = 0; i < NUMBERVARIABLES; i++) {
 		randomnumber=((double) rand() / (RAND_MAX));
         if (randomnumber <= MUTATIONRATE) {
-            gene=(std::rand() % 1024);
+            gene=(std::rand() % 1024);	
             this->values[i] = gene;
         }
     }
