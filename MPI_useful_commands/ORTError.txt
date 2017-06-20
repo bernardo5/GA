@@ -1,0 +1,12 @@
+1. which mpicc --> /mirror/openmpi2/bin/mpicc
+
+2. check for multiple versions of mpi 
+	mpicc (press tab twice) --> mpicc          mpicc.openmpi
+
+3. Since there are two versions, full paths must be used for mpirun!
+
+	sudo /mirror/openmpi2/bin/mpiCC test.cpp -o testrun -std=c++0x
+
+4. After this the binary was created and by typing <which mpirun>, the correct path now pops up: /mirror/openmpi2/bin/mpirun
+
+5. By running "/mirror/openmpi2/bin/mpirun -np 3 -hostfile hosts ./testrun" the error no longer shows up

@@ -1,0 +1,6 @@
+Server:
+sudo /etc/init.d/nfs-kernel-server start
+
+Clients:
+ls /mirror
+sudo mount 192.168.100.100:/mirror /mirror
