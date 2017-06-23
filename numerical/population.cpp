@@ -56,18 +56,23 @@ void population::addChromossome(chromossome individual){
 	return;
 }
 
-chromossome population::tournamentSelection(){
+chromossome* population::tournamentSelection(){
 	//initiate population for tournament
 	population *tournamentPop = new population(true);
-	
-	for (int i = 0; i < TOURNAMENTSIZE; i++) {
+	int i;
+	for ( i = 0; i < TOURNAMENTSIZE; i++) {
         int randomId = (int) (std::rand() % GA_POPSIZE);
         tournamentPop->addChromossome(this->getElement(randomId));
     }
     // Get the fittest
-    tournamentPop->calcPopFitness();
+    //tournamentPop->calcPopFitness();
     tournamentPop->popSort();
-    return tournamentPop->getElement(0);
+    
+    chromossome*newC=tournamentPop->cloneChromossome(tournamentPop->getElement(0));
+  
+    delete tournamentPop;
+    
+    return newC;
 }
 
 chromossome population::crossover(chromossome a, chromossome b){
@@ -95,21 +100,42 @@ vector<chromossome> population::getList(){
 	return this->ChromoPopulation;
 }
 
+chromossome *population::cloneChromossome(chromossome c){
+	return new chromossome(c.getValues()); 
+}
+
+void population::removeChromossome(){
+	ChromoPopulation.erase(ChromoPopulation.begin());
+	return; 
+}
+
 void population::evolvePop(){
 	//by default it is considered eleitism
 	population *newPop=new population(true);
 	//initialize new population with fitest member of previous pop
-	newPop->addChromossome(this->getElement(0));
+	chromossome *fittest=cloneChromossome(this->getElement(0));
+	newPop->addChromossome(*fittest);
 	//evolve population through crossover
-	for (int i = 1; i < this->getSize(); i++) {
-        chromossome indiv1 = this->tournamentSelection();
-        chromossome indiv2 = this->tournamentSelection();
-        chromossome newIndiv = this->crossover(indiv1, indiv2);
+	int i;
+	for (i = 1; i < this->getSize(); i++) {
+        chromossome *indiv1 = this->tournamentSelection();
+        chromossome *indiv2 = this->tournamentSelection();
+        chromossome newIndiv = this->crossover(*indiv1, *indiv2);
+        delete indiv1;
+        delete indiv2;
         newPop->addChromossome(newIndiv);
     }
     //mutate population
     newPop->mutate();
-    this->ChromoPopulation=newPop->getList();
+    
+    //clear previous list and assign to new one
+    this->ChromoPopulation.clear();
+	while(ChromoPopulation.size()!=GA_POPSIZE) {
+        this->addChromossome(*cloneChromossome(newPop->getElement(0)));
+        newPop->removeChromossome();
+    }
+    
+    delete newPop;
 	return;
 }
 

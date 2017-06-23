@@ -15,6 +15,29 @@ chromossome::chromossome(){
     }
 }
 
+chromossome::chromossome(int *vector){
+    this->fitness=100;
+    this->values=new int[NUMBERVARIABLES];
+    int j;
+	for (j = 0; j < NUMBERVARIABLES; j++){
+        this->values[j] = vector[j];
+    }
+}
+
+/*chromossome::~chromossome(){
+	delete[] values;
+}*/
+
+/*void chromossome::operator =(const chromossome&another){
+	int*temp=new int[NUMBERVARIABLES];
+	for (int j = 0; j < NUMBERVARIABLES; j++){
+        temp[j] = another.getGene(j);
+    }
+    delete[] values;
+    values=temp;
+    fitness=another.fitness;
+}*/
+
 unsigned int chromossome::getFitness(){
 	return this->fitness;
 }
@@ -36,7 +59,7 @@ int* chromossome::getValues(){
 
 
 
-string chromossome::getString() const{
+string chromossome::getString()const{
 	string s="Fitness is "+to_string(fitness);
 	for (int j = 0; j < NUMBERVARIABLES; j++)
         s=s+", x["+to_string(j+1)+"]="+to_string(this->values[j])+" ";
@@ -53,6 +76,7 @@ int chromossome::getGene(int i){
 	return this->values[i];
 }
 
+
 void chromossome::mutate(){
 	double randomnumber;
 	int gene;
@@ -65,4 +89,5 @@ void chromossome::mutate(){
     }
 	return;
 }
+	
 
