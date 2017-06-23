@@ -129,9 +129,14 @@ void population::evolvePop(){
     newPop->mutate();
     
     //clear previous list and assign to new one
+    while(ChromoPopulation.size()!=0) {
+        this->getElement(0).deleteVector();
+        this->removeChromossome();
+    }
     this->ChromoPopulation.clear();
 	while(ChromoPopulation.size()!=GA_POPSIZE) {
         this->addChromossome(*cloneChromossome(newPop->getElement(0)));
+        newPop->getElement(0).deleteVector();
         newPop->removeChromossome();
     }
     

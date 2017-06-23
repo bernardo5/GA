@@ -20,7 +20,8 @@ class chromossome{
 		chromossome();
 		chromossome(int *vector);
 		//destructor
-	//	~chromossome();
+		//~chromossome();
+		void deleteVector();
 		//copy constructor
 		//chromossome(const chromossome&c_in):values(new int(*c_in.values)){fitness=0;}
 		//assign operator

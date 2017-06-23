@@ -24,9 +24,9 @@ chromossome::chromossome(int *vector){
     }
 }
 
-/*chromossome::~chromossome(){
+void chromossome::deleteVector(){
 	delete[] values;
-}*/
+}
 
 /*void chromossome::operator =(const chromossome&another){
 	int*temp=new int[NUMBERVARIABLES];
