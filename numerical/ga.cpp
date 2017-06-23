@@ -39,14 +39,14 @@ int main(int argc, char *argv[]){
 	auto start_time = std::chrono::high_resolution_clock::now();
 	//start GA
 	population *pop=new population();
-	cout<<"Cretion\n";
+	//cout<<"Cretion\n";
 	pop->calcPopFitness();
-	cout<<"fitness calc\n";
+	//cout<<"fitness calc\n";
 	/*cout<<"---------------------------\nPrinting...\n";
 	pop->printPopulation();
 	cout<<"\n-------------------------------------------\n";*/
 	pop->popSort();
-	cout<<"sort\n";
+	//cout<<"sort\n";
 	/*cout<<"---------------------------\nPrinting...\n";
 	pop->printPopulation();
 	cout<<"\n-------------------------------------------\n";
@@ -54,11 +54,11 @@ int main(int argc, char *argv[]){
 	*/string s=pop->getElement(0).getString();
 	while(pop->getElement(0).getFitness()!=0){
 		pop->evolvePop();
-		cout<<"evolve\n";
+		//cout<<"evolve\n";
 		pop->calcPopFitness();
-		cout<<"fitness calc\n";
+		//cout<<"fitness calc\n";
 		pop->popSort();
-		cout<<"sort\n";
+		//cout<<"sort\n";
 		if(print==1)cout<<"\nBest string fit in ("+to_string(i)+") iteration: "+string(pop->getElement(0).getString())+"\n";
 		i++;
 	}
