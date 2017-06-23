@@ -51,7 +51,7 @@ int main(int argc, char *argv[]){
 	pop->printPopulation();
 	cout<<"\n-------------------------------------------\n";
 	cout<<"fitness of best: "+to_string(pop->getElement(0).getFitness())+"---"+string(pop->getElement(0).getString())+"\n";
-	*/string s=pop->getElement(0).getString();
+	*///string s=pop->getElement(0).getString();
 	while(pop->getElement(0).getFitness()!=0){
 		pop->evolvePop();
 		//cout<<"evolve\n";
@@ -69,6 +69,7 @@ int main(int argc, char *argv[]){
 	if(print==1)std::cout << "It took " <<
     std::chrono::duration_cast<std::chrono::milliseconds>(time).count() << " milliseconds to run.\n";
     writeFile(pop->getElement(0).getValues(), to_string(std::chrono::duration_cast<std::chrono::milliseconds>(time).count()));
+	pop->cleanup();
 	delete pop;
 	return 0;
 }

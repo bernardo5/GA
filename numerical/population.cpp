@@ -75,7 +75,7 @@ chromossome* population::tournamentSelection(){
     return newC;
 }
 
-chromossome population::crossover(chromossome a, chromossome b){
+chromossome* population::crossover(chromossome a, chromossome b){
 	int size=NUMBERVARIABLES;
 	chromossome *newSol = new chromossome();
     for (int i = 0; i < size; i++) {
@@ -87,7 +87,7 @@ chromossome population::crossover(chromossome a, chromossome b){
 			newSol->setGene(i, b.getGene(i));
        }
      }
-    return *newSol;
+    return newSol;
 }
 
 void population::mutate(){
@@ -115,27 +115,27 @@ void population::evolvePop(){
 	//initialize new population with fitest member of previous pop
 	chromossome *fittest=cloneChromossome(this->getElement(0));
 	newPop->addChromossome(*fittest);
+	delete fittest;
 	//evolve population through crossover
 	int i;
 	for (i = 1; i < this->getSize(); i++) {
         chromossome *indiv1 = this->tournamentSelection();
         chromossome *indiv2 = this->tournamentSelection();
-        chromossome newIndiv = this->crossover(*indiv1, *indiv2);
+        chromossome *newIndiv = this->crossover(*indiv1, *indiv2);
         delete indiv1;
         delete indiv2;
-        newPop->addChromossome(newIndiv);
+        newPop->addChromossome(*newIndiv);
+        delete newIndiv;
     }
     //mutate population
     newPop->mutate();
     
     //clear previous list and assign to new one
-    while(ChromoPopulation.size()!=0) {
-        this->getElement(0).deleteVector();
-        this->removeChromossome();
-    }
-    this->ChromoPopulation.clear();
+    this->cleanup();
 	while(ChromoPopulation.size()!=GA_POPSIZE) {
-        this->addChromossome(*cloneChromossome(newPop->getElement(0)));
+		chromossome*n=cloneChromossome(newPop->getElement(0));
+        this->addChromossome(*n);
+        delete n;
         newPop->getElement(0).deleteVector();
         newPop->removeChromossome();
     }
@@ -144,3 +144,11 @@ void population::evolvePop(){
 	return;
 }
 
+void population::cleanup(){
+	while(ChromoPopulation.size()!=0) {
+		this->getElement(0).deleteVector();
+		this->removeChromossome();
+	}
+	this->ChromoPopulation.clear();
+	return;
+}
