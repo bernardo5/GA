@@ -41,11 +41,22 @@ int main(int argc, char *argv[]){
 	population *pop=new population();
 	pop->calcPopFitness();
 	pop->popSort();
+	int fitness_check=pop->getElement(0).getFitness();
 	string s=pop->getElement(0).getString();
 	while(pop->getElement(0).getFitness()!=0){
 		pop->evolvePop();
 		pop->calcPopFitness();
 		pop->popSort();
+		if(fitness_check<(pop->getElement(0).getFitness())){
+			cout<<"Error in elitism\n";
+			cout<<"---------------------------\nPrinting after sort...\n";
+			pop->printPopulation();
+			cout<<"\n-------------------------------------------\n";
+			exit(1);
+		}else{
+			if(fitness_check>(pop->getElement(0).getFitness()))
+				fitness_check=(pop->getElement(0).getFitness());
+		}
 		if(print==1)cout<<"\nBest string fit in ("+to_string(i)+") iteration: "+string(pop->getElement(0).getString())+"\n";
 		i++;
 	}
