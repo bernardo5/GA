@@ -24,7 +24,7 @@ class population{
 		void calcPopFitness();
 		void popSort();
 		void addChromossome(chromossome individual);
-		chromossome* tournamentSelection();
+		chromossome *tournamentSelection();
 		chromossome* crossover(chromossome a, chromossome b);
 		void mutate();
 		chromossome * cloneChromossome(chromossome c);

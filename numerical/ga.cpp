@@ -29,6 +29,7 @@ void writeFile(int*finalSequence, string final_time){
 int main(int argc, char *argv[]){
 	int i=1;
 	int print=0;
+	int fitness_check;
 	
 	if ( argc < 2 ) print=1; 
 	
@@ -49,16 +50,52 @@ int main(int argc, char *argv[]){
 	//cout<<"sort\n";
 	/*cout<<"---------------------------\nPrinting...\n";
 	pop->printPopulation();
-	cout<<"\n-------------------------------------------\n";
+	cout<<"\n-------------------------------------------\n";*/
 	cout<<"fitness of best: "+to_string(pop->getElement(0).getFitness())+"---"+string(pop->getElement(0).getString())+"\n";
-	*///string s=pop->getElement(0).getString();
+	//string s=pop->getElement(0).getString();
+	
+	fitness_check=pop->getElement(0).getFitness();
 	while(pop->getElement(0).getFitness()!=0){
 		pop->evolvePop();
-		//cout<<"evolve\n";
+		
+		
+		
+		/*cout<<"evolve\n";
+		cout<<"---------------------------\nPrinting after evolve...\n";
+		pop->printPopulation();
+		cout<<"\n-------------------------------------------\n";*/
+		
+		
 		pop->calcPopFitness();
-		//cout<<"fitness calc\n";
+		
+		
+		/*cout<<"fitness calc\n";
+		cout<<"---------------------------\nPrinting after fitness...\n";
+		pop->printPopulation();
+		cout<<"\n-------------------------------------------\n";*/
+		
+		
 		pop->popSort();
+		
+		
+		
+		/*cout<<"---------------------------\nPrinting after sort...\n";
+		pop->printPopulation();
+		cout<<"\n-------------------------------------------\n";
+		exit(0);*/
 		//cout<<"sort\n";
+		
+		
+		/*if(fitness_check<(pop->getElement(0).getFitness())){
+			cout<<"Error in elitism\n";
+			cout<<"---------------------------\nPrinting after sort...\n";
+			pop->printPopulation();
+			cout<<"\n-------------------------------------------\n";
+			exit(1);
+		}else{
+			if(fitness_check>(pop->getElement(0).getFitness()))
+				fitness_check=(pop->getElement(0).getFitness());
+		}*/
 		if(print==1)cout<<"\nBest string fit in ("+to_string(i)+") iteration: "+string(pop->getElement(0).getString())+"\n";
 		i++;
 	}
