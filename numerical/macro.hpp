@@ -1,5 +1,9 @@
 /*Varaibles definitions*/
+<<<<<<< HEAD
 #define NUMBERVARIABLES 4
+=======
+#define NUMBERVARIABLES 16
+>>>>>>> frees
 #define GA_POPSIZE 30 //population size
 #define TOURNAMENTSIZE 3 //tournament population size
 #define UNIFORMRATE 0.5 //decision of crossover

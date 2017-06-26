@@ -19,13 +19,16 @@ class population{
 		population(bool newIteration);
 		int getSize();
 		void printPopulation();
+		void removeChromossome();
 		chromossome getElement(int position);
 		void calcPopFitness();
 		void popSort();
 		void addChromossome(chromossome individual);
-		chromossome tournamentSelection();
-		chromossome crossover(chromossome a, chromossome b);
+		chromossome *tournamentSelection();
+		chromossome* crossover(chromossome a, chromossome b);
 		void mutate();
+		chromossome * cloneChromossome(chromossome c);
 		vector<chromossome> getList();
 		void evolvePop();
+		void cleanup();
 };
