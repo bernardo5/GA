@@ -51,7 +51,7 @@ int main(int argc, char *argv[]){
 	/*cout<<"---------------------------\nPrinting...\n";
 	pop->printPopulation();
 	cout<<"\n-------------------------------------------\n";*/
-	cout<<"fitness of best: "+to_string(pop->getElement(0).getFitness())+"---"+string(pop->getElement(0).getString())+"\n";
+	//cout<<"fitness of best: "+to_string(pop->getElement(0).getFitness())+"---"+string(pop->getElement(0).getString())+"\n";
 	//string s=pop->getElement(0).getString();
 	
 	fitness_check=pop->getElement(0).getFitness();
