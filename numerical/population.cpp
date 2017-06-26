@@ -96,8 +96,7 @@ chromossome* population::crossover(chromossome a, chromossome b){
 }
 
 void population::mutate(){
-	for_each(ChromoPopulation.begin(), ChromoPopulation.end(), []( chromossome & n)
-		{n.mutate();});
+	for_each(ChromoPopulation.begin()+1, ChromoPopulation.end(), []( chromossome & n){n.mutate();});
 	return;
 }
 
@@ -120,6 +119,10 @@ void population::evolvePop(){
 	//initialize new population with fitest member of previous pop
 	chromossome fittest(this->getElement(0).getValues());
 	newPop->addChromossome(fittest);
+	/*cout<< "The best is: ";
+	for(int k=0; k<	NUMBERVARIABLES; k++)
+		cout<<to_string((newPop->getElement(0).getValues())[k])+", ";
+	cout<<"\n";*/
 	//evolve population through crossover
 	int i;
 	for (i = 1; i < this->getSize(); i++) {

@@ -86,7 +86,7 @@ int main(int argc, char *argv[]){
 		//cout<<"sort\n";
 		
 		
-		/*if(fitness_check<(pop->getElement(0).getFitness())){
+		if(fitness_check<(pop->getElement(0).getFitness())){
 			cout<<"Error in elitism\n";
 			cout<<"---------------------------\nPrinting after sort...\n";
 			pop->printPopulation();
@@ -95,7 +95,7 @@ int main(int argc, char *argv[]){
 		}else{
 			if(fitness_check>(pop->getElement(0).getFitness()))
 				fitness_check=(pop->getElement(0).getFitness());
-		}*/
+		}
 		if(print==1)cout<<"\nBest string fit in ("+to_string(i)+") iteration: "+string(pop->getElement(0).getString())+"\n";
 		i++;
 	}
