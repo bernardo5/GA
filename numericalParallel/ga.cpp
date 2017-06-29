@@ -6,6 +6,7 @@
 #include <ctime>
 #include <chrono>
 #include <fstream>
+#include <unistd.h>
 //using expressions
 using namespace std;
 
@@ -41,8 +42,8 @@ int main(int argc, char *argv[]){
 	MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
 	
 	
-		//initialize rand parameter
-		srand(world_rank);
+	//initialize rand parameter
+	srand(world_rank+1);
 	
 	if(world_rank==0){
 		//start counting clock
@@ -51,9 +52,15 @@ int main(int argc, char *argv[]){
 	
 	population *pop=new population();
 	pop->calcPopFitness();
-	pop->printPopulation();
 	
+	int bcast_flag;
 	if(world_rank==0){
+		cout<<"Master population:\n";
+		pop->printPopulation();
+		cout<<"-------------------------------------------\n";
+		bcast_flag=1;
+		
+		MPI_Send(&bcast_flag, 1, MPI_INT, 1, 0, MPI_COMM_WORLD);
 		//receive data
 		
 		
@@ -62,10 +69,24 @@ int main(int argc, char *argv[]){
 		pop->printPopulation();
 		pop->popSort();*/
 	}else{
+		if(world_rank==1){
+			MPI_Recv(&bcast_flag, 1, MPI_INT, 0, 0, MPI_COMM_WORLD,
+             MPI_STATUS_IGNORE);
+			cout<<"Slave "+to_string(world_rank)+" population:\n";
+			pop->printPopulation();
+			cout<<"-------------------------------------------\n";
+			sleep(1);
+			MPI_Send(&bcast_flag, 1, MPI_INT, 2, 0, MPI_COMM_WORLD);
+		}else{//world_rank==2
+			MPI_Recv(&bcast_flag, 1, MPI_INT, 1, 0, MPI_COMM_WORLD,
+             MPI_STATUS_IGNORE);
+            // MPI_Barrier(MPI_COMM_WORLD);
+			cout<<"Slave "+to_string(world_rank)+" population:\n";
+			pop->printPopulation();
+			cout<<"-------------------------------------------\n";
+		}
+		
 		//send data
-		
-		
-		
 		
 	}	
 		
