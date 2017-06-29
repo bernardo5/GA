@@ -5,7 +5,7 @@ using namespace std;
 using namespace std::tr1::placeholders;
 
 population::population(){
-	this->population_size=GA_POPSIZE;
+	this->population_size=GA_POPSIZE/3;
 
 	chromossome *individual;
 	ChromoPopulation.clear();
@@ -41,80 +41,8 @@ chromossome population::getElement(int position){
 }
 
 void population::calcPopFitness(){
-	/*for_each(ChromoPopulation.begin(), ChromoPopulation.end(), [=]( chromossome & n)
-		{n.calcFitness();});*/
-	
-	//initialize paralelism world
-	MPI_Init(NULL, NULL);
-	int world_size;
-	MPI_Comm_size(MPI_COMM_WORLD, &world_size);
-	int world_rank;
-	MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
-	//distribute jobs through processors
-	if(world_rank==0){
-		//send objects to the other processors
-		
-		/*place the genes in int vector*/
-		chromossome*p0=cloneChromossome(this->getElement(0));
-		chromossome*p1=cloneChromossome(this->getElement(1));
-		chromossome*p2=cloneChromossome(this->getElement(2));
-		int fitness_p1, fitness_p2;
-		
-		
-		
-		MPI_Send(&p1->getValues()[0], NUMBERVARIABLES, MPI_INT, 1, 0, MPI_COMM_WORLD);
-		MPI_Send(&p2->getValues()[0], NUMBERVARIABLES, MPI_INT, 2, 0, MPI_COMM_WORLD);
-		//do part of the computations
-		
-		//reassemble the computed info
-		/*MPI_Recv(&number, 1, MPI_INT, 1, 0, MPI_COMM_WORLD,
-             MPI_STATUS_IGNORE);
-		MPI_Recv(&number, 1, MPI_INT, 2, 0, MPI_COMM_WORLD,
-             MPI_STATUS_IGNORE);*/
-        
-        //free the allocated memory
-        delete p0;
-        delete p1;
-        delete p2;
-	}else{
-		if(world_rank==1){
-			//declare auxiliar variables
-			int *p1_=new int[NUMBERVARIABLES];
-			//receive objects to process from master
-			MPI_Recv(&p1_, NUMBERVARIABLES, MPI_INT, 0, 0, MPI_COMM_WORLD,
-             MPI_STATUS_IGNORE);
-             
-            //perform fitness calculations
-			chromossome *aux1=new chromossome(p1_);
-			aux1->calcFitness();
-			cout<<"chromossome fitness is: "+to_string(aux1->getFitness())+"\n";	
-			//send info back
-			//MPI_Send(&number1, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
-			
-			//free memory
-			delete aux1;
-			delete p1_;
-		}else{//world_rank=2
-			//declare auxiliar variables
-			int *p2_=new int[NUMBERVARIABLES];
-			//receive objects to process from master
-            MPI_Recv(&p2_, NUMBERVARIABLES, MPI_INT, 0, 0, MPI_COMM_WORLD,
-             MPI_STATUS_IGNORE);
-             
-			//perform fitness calculations
-			chromossome *aux2=new chromossome(p2_);
-			aux2->calcFitness();
-			cout<<"chromossome fitness is: "+to_string(aux2->getFitness())+"\n";
-			//send info back
-			//MPI_Send(&number1, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
-			
-			//free memory
-			delete aux2;
-			delete p2_;
-		}
-			
-	}
-	MPI_Finalize();
+	for_each(ChromoPopulation.begin(), ChromoPopulation.end(), [=]( chromossome & n)
+		{n.calcFitness();});
 	return;
 }
 

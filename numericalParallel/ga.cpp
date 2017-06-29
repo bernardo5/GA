@@ -33,14 +33,43 @@ int main(int argc, char *argv[]){
 	
 	if ( argc < 2 ) print=1; 
 	
+	//initialize paralelism world
+	MPI_Init(NULL, NULL);
+	int world_size;
+	MPI_Comm_size(MPI_COMM_WORLD, &world_size);
+	int world_rank;
+	MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
 	
-	//initialize rand parameter
-	srand(time(0));
-	//start counting clock
-	auto start_time = std::chrono::high_resolution_clock::now();
-	//start GA
+	
+		//initialize rand parameter
+		srand(world_rank);
+	
+	if(world_rank==0){
+		//start counting clock
+		auto start_time = std::chrono::high_resolution_clock::now();
+	}
+	
 	population *pop=new population();
+	pop->calcPopFitness();
 	pop->printPopulation();
+	
+	if(world_rank==0){
+		//receive data
+		
+		
+		
+		/*cout<<"--------------------------------------\n";
+		pop->printPopulation();
+		pop->popSort();*/
+	}else{
+		//send data
+		
+		
+		
+		
+	}	
+		
+	
 	//pop->calcPopFitness();
 	/*cout<<"--------------------------------------\n";
 	pop->printPopulation();*/
@@ -74,6 +103,6 @@ int main(int argc, char *argv[]){
     writeFile(pop->getElement(0).getValues(), to_string(std::chrono::duration_cast<std::chrono::milliseconds>(time).count()));
 	pop->cleanup();
 	delete pop;*/
-	
+	MPI_Finalize();
 	return 0;
 }
