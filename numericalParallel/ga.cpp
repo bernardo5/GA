@@ -139,11 +139,34 @@ int main(int argc, char *argv[]){
         cout<<"From rank "+to_string(ch.at(2).arr[0])+" with fitness "+to_string(ch.at(2).arr[1])+"\n";
         //-----------------------------------------------------------------------------------------------
         
-        //
+        //Broadcast the champion rank number to the machines, so they know if they send the champion over
+        int ch_number=ch.at(0).arr[0];//CHANGE IT LATER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        MPI_Bcast( &ch_number, 1, MPI_INT, 0, MPI_COMM_WORLD);
+		if(ch_number!=world_rank){
+			//receive the champion
+			MPI_Status status;
+			MPI_Probe(MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
+			int l;
+			MPI_Get_count(&status, MPI_CHAR, &l);
+			//int l = status.Get_count(MPI_CHAR);
+			char *buf = new char[l];
+			MPI_Recv(buf, l, MPI_CHAR, MPI_ANY_SOURCE,  MPI_ANY_TAG, MPI_COMM_WORLD, &status);
+			string champ_aux(buf, l);
+			delete [] buf;
+			cout<<champ_aux;
+		}else cout<<"Im the master and im the champion holder!\n";
+		MPI_Barrier(MPI_COMM_WORLD);
 	}else{
 		//send champions fitnesses
 		MPI_Send(champ, 2, MPI_INT, 0, 0, MPI_COMM_WORLD);
 		MPI_Barrier(MPI_COMM_WORLD);
+		int champ_rank;
+		MPI_Bcast(&champ_rank, 1, MPI_INT, 0, MPI_COMM_WORLD);
+		if(champ_rank==world_rank){//sends the champ over
+			string champ_string="Thanks for the tip! Im the champion older! ["+to_string(world_rank)+"]\n";
+			MPI_Send(champ_string.c_str(), champ_string.length(), MPI_CHAR, 0, 0, MPI_COMM_WORLD);
+		}
+		MPI_Barrier(MPI_COMM_WORLD);	
 	}	
 	
 	
