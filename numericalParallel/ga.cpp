@@ -35,6 +35,16 @@ int * getChampion(int world_rank, population*pop){
 	return champion;
 }
 
+typedef struct champs{		
+		int arr[2];
+}champs_list;
+
+void copy_integer_array_to_struct(champs_list *l, int * arr2){		
+	l->arr[0]=arr2[0];
+	l->arr[1]=arr2[1];
+	return;
+}
+
 int main(int argc, char *argv[]){
 	int i=1;
 	int print=0;
@@ -96,24 +106,34 @@ int main(int argc, char *argv[]){
 	cout<<"Rank "+to_string(champ[0])+" champion has fitness "+to_string(champ[1])+"\n";
 	if(world_rank==0){
 		//receive champions fitnesses
-		int *arr1=new int[2];
-		int *arr2=new int[2];
-		MPI_Recv(arr1, 2, MPI_INT, 1, 0, MPI_COMM_WORLD,
+		champs master;
+		champs p1;
+		champs p2;
+		MPI_Recv(p1.arr, 2, MPI_INT, 1, 0, MPI_COMM_WORLD,
              MPI_STATUS_IGNORE);
-		MPI_Recv(arr2, 2, MPI_INT, 2, 0, MPI_COMM_WORLD,
+		MPI_Recv(p2.arr, 2, MPI_INT, 2, 0, MPI_COMM_WORLD,
              MPI_STATUS_IGNORE);
         MPI_Barrier(MPI_COMM_WORLD);
-        cout<<"Selected champions are:\n";
-        cout<<"From rank "+to_string(champ[0])+" with fitness "+to_string(champ[1])+"\n";
-        cout<<"From rank "+to_string(arr1[0])+" with fitness "+to_string(arr1[1])+"\n";
-        cout<<"From rank "+to_string(arr2[0])+" with fitness "+to_string(arr2[1])+"\n";
-        
+		copy_integer_array_to_struct(&master, champ);
+		
+        std::vector<champs> ch;
+        ch.push_back(master);
+        ch.push_back(p1);
+        ch.push_back(p2);
+		cout<<"Selected champions are:\n";
+        cout<<"From rank "+to_string(ch.at(0).arr[0])+" with fitness "+to_string(ch.at(0).arr[1])+"\n";
+        cout<<"From rank "+to_string(ch.at(1).arr[0])+" with fitness "+to_string(ch.at(1).arr[1])+"\n";
+        cout<<"From rank "+to_string(ch.at(2).arr[0])+" with fitness "+to_string(ch.at(2).arr[1])+"\n";
 	}else{
 		//send champions fitnesses
 		MPI_Send(champ, 2, MPI_INT, 0, 0, MPI_COMM_WORLD);
 		MPI_Barrier(MPI_COMM_WORLD);
 	}	
 	
+	
+	
+	
+	delete champ;
 	
 	/*
 	fitness_check=pop->getElement(0).getFitness();
