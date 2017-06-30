@@ -25,7 +25,15 @@ void writeFile(int*finalSequence, string final_time){
 	}
 	
 	return;
-}	
+}
+
+int * getChampion(int world_rank, population*pop){
+	int *champion= new int[2];
+		champion[0]=world_rank;
+		champion[1]=pop->getElement(0).getFitness();
+	
+	return champion;
+}
 
 int main(int argc, char *argv[]){
 	int i=1;
@@ -53,6 +61,8 @@ int main(int argc, char *argv[]){
 	population *pop=new population();
 	pop->calcPopFitness();
 	
+/* This is just for testing-------------------------------------*/
+/************************************************************************/
 	int bcast_flag;
 	if(world_rank==0){
 		cout<<"Master population:\n";
@@ -61,13 +71,6 @@ int main(int argc, char *argv[]){
 		bcast_flag=1;
 		
 		MPI_Send(&bcast_flag, 1, MPI_INT, 1, 0, MPI_COMM_WORLD);
-		//receive data
-		
-		
-		
-		/*cout<<"--------------------------------------\n";
-		pop->printPopulation();
-		pop->popSort();*/
 	}else{
 		if(world_rank==1){
 			MPI_Recv(&bcast_flag, 1, MPI_INT, 0, 0, MPI_COMM_WORLD,
@@ -85,17 +88,34 @@ int main(int argc, char *argv[]){
 			pop->printPopulation();
 			cout<<"-------------------------------------------\n";
 		}
-		
-		//send data
-		
 	}	
-		
+/************************************************************************/	
+	//calculate the champions
+	pop->popSort();
+	int*champ=getChampion(world_rank, pop);
+	cout<<"Rank "+to_string(champ[0])+" champion has fitness "+to_string(champ[1])+"\n";
+	if(world_rank==0){
+		//receive champions fitnesses
+		int *arr1=new int[2];
+		int *arr2=new int[2];
+		MPI_Recv(arr1, 2, MPI_INT, 1, 0, MPI_COMM_WORLD,
+             MPI_STATUS_IGNORE);
+		MPI_Recv(arr2, 2, MPI_INT, 2, 0, MPI_COMM_WORLD,
+             MPI_STATUS_IGNORE);
+        MPI_Barrier(MPI_COMM_WORLD);
+        cout<<"Selected champions are:\n";
+        cout<<"From rank "+to_string(champ[0])+" with fitness "+to_string(champ[1])+"\n";
+        cout<<"From rank "+to_string(arr1[0])+" with fitness "+to_string(arr1[1])+"\n";
+        cout<<"From rank "+to_string(arr2[0])+" with fitness "+to_string(arr2[1])+"\n";
+        
+	}else{
+		//send champions fitnesses
+		MPI_Send(champ, 2, MPI_INT, 0, 0, MPI_COMM_WORLD);
+		MPI_Barrier(MPI_COMM_WORLD);
+	}	
 	
-	//pop->calcPopFitness();
-	/*cout<<"--------------------------------------\n";
-	pop->printPopulation();*/
-	/*pop->popSort();
 	
+	/*
 	fitness_check=pop->getElement(0).getFitness();
 	while(pop->getElement(0).getFitness()!=0){
 		pop->evolvePop();
