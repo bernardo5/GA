@@ -140,7 +140,7 @@ int main(int argc, char *argv[]){
         //-----------------------------------------------------------------------------------------------
         
         //Broadcast the champion rank number to the machines, so they know if they send the champion over
-        int ch_number=ch.at(0).arr[0];//CHANGE IT LATER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        int ch_number=ch.at(1).arr[0];//CHANGE IT LATER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         MPI_Bcast( &ch_number, 1, MPI_INT, 0, MPI_COMM_WORLD);
 		if(ch_number!=world_rank){
 			//receive the champion
@@ -154,6 +154,12 @@ int main(int argc, char *argv[]){
 			string champ_aux(buf, l);
 			delete [] buf;
 			cout<<champ_aux;
+			int *values_champ=new int[NUMBERVARIABLES];
+			MPI_Recv(values_champ, NUMBERVARIABLES, MPI_INT, MPI_ANY_SOURCE,  MPI_ANY_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+			chromossome*newChamp=new chromossome(values_champ);
+			delete [] values_champ;
+			cout<<newChamp->getString();
+			delete newChamp;
 		}else cout<<"Im the master and im the champion holder!\n";
 		MPI_Barrier(MPI_COMM_WORLD);
 	}else{
@@ -165,6 +171,7 @@ int main(int argc, char *argv[]){
 		if(champ_rank==world_rank){//sends the champ over
 			string champ_string="Thanks for the tip! Im the champion older! ["+to_string(world_rank)+"]\n";
 			MPI_Send(champ_string.c_str(), champ_string.length(), MPI_CHAR, 0, 0, MPI_COMM_WORLD);
+			MPI_Send(pop->getElement(0).getValues(), NUMBERVARIABLES, MPI_INT, 0, 0, MPI_COMM_WORLD);
 		}
 		MPI_Barrier(MPI_COMM_WORLD);	
 	}	
