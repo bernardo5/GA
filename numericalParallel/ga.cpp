@@ -37,6 +37,8 @@ int * getChampion(int world_rank, population*pop){
 
 typedef struct champs{		
 		int arr[2];
+		bool operator<( const champs& rhs ) const
+        { return arr[1] < rhs.arr[1]; }
 }champs_list;
 
 void copy_integer_array_to_struct(champs_list *l, int * arr2){		
@@ -120,10 +122,24 @@ int main(int argc, char *argv[]){
         ch.push_back(master);
         ch.push_back(p1);
         ch.push_back(p2);
+        //-----------------------------------------------------------------------------------------------
 		cout<<"Selected champions are:\n";
         cout<<"From rank "+to_string(ch.at(0).arr[0])+" with fitness "+to_string(ch.at(0).arr[1])+"\n";
         cout<<"From rank "+to_string(ch.at(1).arr[0])+" with fitness "+to_string(ch.at(1).arr[1])+"\n";
         cout<<"From rank "+to_string(ch.at(2).arr[0])+" with fitness "+to_string(ch.at(2).arr[1])+"\n";
+        //-----------------------------------------------------------------------------------------------
+        sort(ch.begin(), ch.end()); //compute the champion of all champions
+        
+        //-----------------------------------------------------------------------------------------------
+        cout<<"The world champion is:\n";
+        cout<<"From rank "+to_string(ch.at(0).arr[0])+" with fitness "+to_string(ch.at(0).arr[1])+"\n";
+        cout<<"Second world champion is:\n";
+        cout<<"From rank "+to_string(ch.at(1).arr[0])+" with fitness "+to_string(ch.at(1).arr[1])+"\n";
+        cout<<"Third world champion is:\n";
+        cout<<"From rank "+to_string(ch.at(2).arr[0])+" with fitness "+to_string(ch.at(2).arr[1])+"\n";
+        //-----------------------------------------------------------------------------------------------
+        
+        //
 	}else{
 		//send champions fitnesses
 		MPI_Send(champ, 2, MPI_INT, 0, 0, MPI_COMM_WORLD);
