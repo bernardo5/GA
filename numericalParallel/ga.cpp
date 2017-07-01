@@ -142,8 +142,10 @@ int main(int argc, char *argv[]){
         //Broadcast the champion rank number to the machines, so they know if they send the champion over
         int ch_number=ch.at(0).arr[0];//CHANGE IT LATER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         MPI_Bcast( &ch_number, 1, MPI_INT, 0, MPI_COMM_WORLD);
+		int m=0;
 		if(ch_number!=world_rank){
 			//receive the champion
+			m=1;
 			MPI_Status status;
 			MPI_Probe(MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
 			int l;
@@ -158,7 +160,7 @@ int main(int argc, char *argv[]){
 			MPI_Recv(values_champ, NUMBERVARIABLES+1, MPI_INT, MPI_ANY_SOURCE,  MPI_ANY_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 			chromossome*newChamp=new chromossome(values_champ, true);
 			delete [] values_champ;
-			cout<<newChamp->getString();
+			//cout<<newChamp->getString();
 			//add the champion to the beggining of the list
 			pop->addChromossomeBeginning(*newChamp);
 			//free the memory
@@ -166,10 +168,23 @@ int main(int argc, char *argv[]){
 		}else cout<<"Im the master and im the champion holder!\n";
 		MPI_Barrier(MPI_COMM_WORLD); //we are sure now that the master has the champion for sure 
 		//receive all pop elements of slaves
-		
+		int receives=0;
+		int *values_champEle;
+		chromossome*newChampEle;
+		while(receives!=(((GA_POPSIZE/3)*2)-m)) {
+			values_champEle=new int[NUMBERVARIABLES+1];
+			MPI_Recv(values_champEle, NUMBERVARIABLES+1, MPI_INT, MPI_ANY_SOURCE,  MPI_ANY_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+			newChampEle=new chromossome(values_champEle, true);
+			delete [] values_champEle;
+			//add the champion to the beggining of the list
+			pop->addChromossome(*newChampEle);
+			//free the memory
+			delete newChampEle;
+			receives++;
+		}
 		//has now all elements
-		//MPI_Barrier(MPI_COMM_WORLD);
-		pop->printPopulation();
+		MPI_Barrier(MPI_COMM_WORLD);
+		pop->printPopulation(); //Master now has all the population
 	}else{
 		//send champions fitnesses
 		MPI_Send(champ, 2, MPI_INT, 0, 0, MPI_COMM_WORLD);
@@ -186,7 +201,18 @@ int main(int argc, char *argv[]){
 			pop->deleteFirst();
 		}
 		MPI_Barrier(MPI_COMM_WORLD);//knows now that master has the champion
-			
+		//send all population elements
+		int*sendVecEle;
+		while(pop->getList().size()!=0) {
+			sendVecEle=pop->codifChamp();
+			MPI_Send(sendVecEle, NUMBERVARIABLES+1, MPI_INT, 0, 0, MPI_COMM_WORLD);
+			delete [] sendVecEle;
+			//delete sent element from pop
+			pop->deleteFirst();
+		}
+		
+		MPI_Barrier(MPI_COMM_WORLD);
+		//pop->printPopulation(); //Slaves have now zero pop
 	}	
 	
 	
