@@ -214,11 +214,53 @@ int main(int argc, char *argv[]){
 		MPI_Barrier(MPI_COMM_WORLD);
 		//pop->printPopulation(); //Slaves have now zero pop
 	}	
-	
-	
-	
-	
 	delete champ;
+	
+	//distribute the pop
+	if(world_rank==0){//send pop elements
+		int*sendElement;
+		int position;
+		int popNumber=GA_POPSIZE;
+		for(int y=0; y<(GA_POPSIZE/3); y++){//send pop elements to first process
+			position=std::rand() % popNumber;
+			sendElement=pop->codifElement(position);
+			MPI_Send(sendElement, NUMBERVARIABLES+1, MPI_INT, 1, 0, MPI_COMM_WORLD);
+			delete [] sendElement;
+			//delete champion from pop
+			pop->deleteElement(position);
+			popNumber--;
+		}
+		for(int z=0; z<(GA_POPSIZE/3); z++){//send pop elements to second process
+			position=std::rand() % popNumber;
+			sendElement=pop->codifElement(position);
+			MPI_Send(sendElement, NUMBERVARIABLES+1, MPI_INT, 2, 0, MPI_COMM_WORLD);
+			delete [] sendElement;
+			//delete champion from pop
+			pop->deleteElement(position);
+			popNumber--;
+		}
+		MPI_Barrier(MPI_COMM_WORLD); //population is now distributed again
+		/*cout<<"\n------------------------\n";
+			pop->printPopulation();*/
+	}else{//receive pop elements
+		int*rcvElement;
+		chromossome*newElemente;
+		for(int q=0; q<(GA_POPSIZE/3); q++){//send pop elements to second process
+			rcvElement=new int[NUMBERVARIABLES+1];
+			MPI_Recv(rcvElement, NUMBERVARIABLES+1, MPI_INT, 0,  MPI_ANY_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+			newElemente=new chromossome(rcvElement, true);
+			delete [] rcvElement;
+			//add the champion to the beggining of the list
+			pop->addChromossome(*newElemente);
+			//free the memory
+			delete newElemente;
+		}
+		MPI_Barrier(MPI_COMM_WORLD); //population is now distributed again
+		/*if(world_rank==2){//send pop elements to second process
+			cout<<"\n------------------------\n";
+			pop->printPopulation();
+		}*/
+	}
 	
 	/*
 	fitness_check=pop->getElement(0).getFitness();

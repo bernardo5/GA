@@ -20,6 +20,7 @@ class population{
 		int getSize();
 		void printPopulation();
 		void removeChromossome();
+		void removeChromossome(int position);
 		chromossome getElement(int position);
 		void calcPopFitness();
 		void popSort();
@@ -34,4 +35,6 @@ class population{
 		void cleanup();
 		void deleteFirst();
 		int * codifChamp();
+		int * codifElement(int position);
+		void deleteElement(int position);
 };

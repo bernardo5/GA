@@ -118,6 +118,11 @@ void population::removeChromossome(){
 	return; 
 }
 
+void population::removeChromossome(int position){
+	ChromoPopulation.erase(ChromoPopulation.begin()+position);
+	return; 
+}
+
 void population::evolvePop(){
 	//by default it is considered eleitism
 	population *newPop=new population(true);
@@ -159,12 +164,16 @@ void population::evolvePop(){
 }
 
 void population::deleteFirst(){
-	
-	this->getElement(0).deleteVector();
-	this->removeChromossome();
-	
+	this->deleteElement(0);
 	return;
 }
+
+void population::deleteElement(int position){
+	this->getElement(position).deleteVector();
+	this->removeChromossome(position);
+	return;
+}
+
 
 void population::cleanup(){
 	while(ChromoPopulation.size()!=0) {
@@ -175,11 +184,15 @@ void population::cleanup(){
 }
 
 int * population::codifChamp(){
+	return this->codifElement(0);
+}
+
+int * population::codifElement(int position){
 	int * vector=new int[NUMBERVARIABLES+1];
-	int *aux=this->getElement(0).getValues();
+	int *aux=this->getElement(position).getValues();
 	for(int i=0; i<NUMBERVARIABLES; i++){
 		vector[i]=aux[i];
 	}
-	vector[NUMBERVARIABLES]=this->getElement(0).getFitness();
+	vector[NUMBERVARIABLES]=this->getElement(position).getFitness();
 	return vector;
 }
