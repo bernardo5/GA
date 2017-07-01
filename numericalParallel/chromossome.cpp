@@ -15,13 +15,16 @@ chromossome::chromossome(){
     }
 }
 
-chromossome::chromossome(int *vector){
-    this->fitness=100;
+chromossome::chromossome(int *vector, bool Fitness){
+	if(!Fitness){
+		this->fitness=100;
+		
+	}else this->fitness=vector[NUMBERVARIABLES];
     this->values=new int[NUMBERVARIABLES];
-    int j;
+	int j;
 	for (j = 0; j < NUMBERVARIABLES; j++){
-        this->values[j] = vector[j];
-    }
+		this->values[j] = vector[j];
+	}
 }
 
 void chromossome::deleteVector(){

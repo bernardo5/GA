@@ -56,6 +56,11 @@ void population::addChromossome(chromossome individual){
 	return;
 }
 
+void population::addChromossomeBeginning(chromossome individual){
+	ChromoPopulation.insert(ChromoPopulation.begin(), individual);
+	return;
+}
+
 chromossome *population::tournamentSelection(){
 	//initiate population for tournament
 	population *tournamentPop = new population(true);
@@ -71,7 +76,7 @@ chromossome *population::tournamentSelection(){
     //tournamentPop->calcPopFitness();
     tournamentPop->popSort();
     
-    chromossome *newC=new chromossome(tournamentPop->getElement(0).getValues());
+    chromossome *newC=new chromossome(tournamentPop->getElement(0).getValues(), false);
 	
 	tournamentPop->cleanup();
 	
@@ -105,7 +110,7 @@ vector<chromossome> population::getList(){
 }
 
 chromossome *population::cloneChromossome(chromossome c){
-	return new chromossome(c.getValues()); 
+	return new chromossome(c.getValues(), false); 
 }
 
 void population::removeChromossome(){
@@ -117,7 +122,7 @@ void population::evolvePop(){
 	//by default it is considered eleitism
 	population *newPop=new population(true);
 	//initialize new population with fitest member of previous pop
-	chromossome fittest(this->getElement(0).getValues());
+	chromossome fittest(this->getElement(0).getValues(), false);
 	newPop->addChromossome(fittest);
 	/*cout<< "The best is: ";
 	for(int k=0; k<	NUMBERVARIABLES; k++)
@@ -146,19 +151,35 @@ void population::evolvePop(){
 		chromossome*n=cloneChromossome(newPop->getElement(0));
         this->addChromossome(*n);
         delete n;
-        newPop->getElement(0).deleteVector();
-        newPop->removeChromossome();
+        this->deleteFirst();
     }
     
     delete newPop;
 	return;
 }
 
+void population::deleteFirst(){
+	
+	this->getElement(0).deleteVector();
+	this->removeChromossome();
+	
+	return;
+}
+
 void population::cleanup(){
 	while(ChromoPopulation.size()!=0) {
-		this->getElement(0).deleteVector();
-		this->removeChromossome();
+		this->deleteFirst();
 	}
 	this->ChromoPopulation.clear();
 	return;
+}
+
+int * population::codifChamp(){
+	int * vector=new int[NUMBERVARIABLES+1];
+	int *aux=this->getElement(0).getValues();
+	for(int i=0; i<NUMBERVARIABLES; i++){
+		vector[i]=aux[i];
+	}
+	vector[NUMBERVARIABLES]=this->getElement(0).getFitness();
+	return vector;
 }

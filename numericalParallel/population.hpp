@@ -24,6 +24,7 @@ class population{
 		void calcPopFitness();
 		void popSort();
 		void addChromossome(chromossome individual);
+		void addChromossomeBeginning(chromossome individual);
 		chromossome *tournamentSelection();
 		chromossome* crossover(chromossome a, chromossome b);
 		void mutate();
@@ -31,4 +32,6 @@ class population{
 		vector<chromossome> getList();
 		void evolvePop();
 		void cleanup();
+		void deleteFirst();
+		int * codifChamp();
 };

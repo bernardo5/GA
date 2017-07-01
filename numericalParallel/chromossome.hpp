@@ -18,7 +18,7 @@ class chromossome{
 		unsigned int fitness;
 		//constructor
 		chromossome();
-		chromossome(int *vector);
+		chromossome(int *vector, bool Fitness);
 		//destructor
 		//~chromossome();
 		void deleteVector();
