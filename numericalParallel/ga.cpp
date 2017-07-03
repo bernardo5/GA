@@ -10,6 +10,15 @@
 //using expressions
 using namespace std;
 
+bool cycleBreak(int world_rank, population*pop){
+	int cycle=0;
+	if(world_rank==0)
+		if(pop->getElement(0).getFitness()==0) cycle=1;
+	MPI_Bcast(&cycle, 1, MPI_INT, 0, MPI_COMM_WORLD);
+	if(cycle==1) return true;
+	return false;
+}
+
 void printAllPops(int world_rank, population*pop){		
 	if(world_rank==0){		
 		cout<<"Master pop\n";
@@ -183,16 +192,16 @@ int main(int argc, char *argv[]){
 	while(true/* stop condition*/){
 		pop->popSort();
 		if(world_rank==0)
-			if(print==1)
-				cout<<"\nBest string fit in ("+to_string(i)+") iteration: "+string(pop->getElement(0).getString())+"\n";
+			//if(print==1)
+				//cout<<"\nBest string fit in ("+to_string(i)+") iteration: "+string(pop->getElement(0).getString())+"\n";
 		//if(world_rank==2)pop->printPopulation();
 		pop->evolvePop();
 		pop->calcPopFitness();
 		pop->popSort();
 		MPI_Barrier(MPI_COMM_WORLD);
 		champSync(world_rank, pop);
-		if(world_rank==0)
-			if(pop->getElement(0).getFitness()==0)break;
+		
+		if(cycleBreak(world_rank, pop)) break;
 		
 		distributePop(world_rank, pop);
 		/*printAllPops(world_rank, pop);
@@ -201,7 +210,7 @@ int main(int argc, char *argv[]){
 	}
 	if(world_rank==0)
 			if(print==1)
-				cout<<"\nBest string fit in ("+to_string(i)+") iteration: "+string(pop->getElement(0).getString())+"\n";
+				cout<<"\nBest string fit in ("+to_string(iteration)+") iteration: "+string(pop->getElement(0).getString())+"\n";
 	if(world_rank==0){
 		 if(print==1)cout<<"\nGA algorithms work!\n";
 		//end of GA algorithm and stop counting time
