@@ -37,4 +37,10 @@ class population{
 		int * codifChamp();
 		int * codifElement(int position);
 		void deleteElement(int position);
+		void receiveOutsideChromossome(bool beginning);
+		void receiveAllChromossomes(int m);
+		void sendChromossome(bool champ, int position, int dest_rank);
+		void sendAll();
+		void distribPop();
+		void receivePopPart();
 };

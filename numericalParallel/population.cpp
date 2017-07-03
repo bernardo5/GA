@@ -196,3 +196,71 @@ int * population::codifElement(int position){
 	vector[NUMBERVARIABLES]=this->getElement(position).getFitness();
 	return vector;
 }
+
+void population::receiveOutsideChromossome(bool beginning){
+	int *values_champ=new int[NUMBERVARIABLES+1];
+	MPI_Recv(values_champ, NUMBERVARIABLES+1, MPI_INT, MPI_ANY_SOURCE,  MPI_ANY_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+	chromossome*newChamp=new chromossome(values_champ, true);
+	delete [] values_champ;
+	//cout<<newChamp->getString();
+	//add the champion to the beggining of the list
+	if(beginning)
+		this->addChromossomeBeginning(*newChamp);
+	else this->addChromossome(*newChamp);
+	//free the memory
+	delete newChamp;
+	return;
+}
+
+void population::receiveAllChromossomes(int m){
+	int receives=0;
+	while(receives!=(((GA_POPSIZE/3)*2)-m)) {
+		this->receiveOutsideChromossome(false);
+		receives++;
+	}
+	return;
+}
+
+void population::sendChromossome(bool champ, int position, int dest_rank){
+	int*sendVec;
+	if(champ)sendVec=this->codifChamp();
+		else sendVec=this->codifElement(position);
+	MPI_Send(sendVec, NUMBERVARIABLES+1, MPI_INT, dest_rank, 0, MPI_COMM_WORLD);
+	delete [] sendVec;
+	//delete sent element from pop
+	if(champ) this->deleteFirst();
+		else this->deleteElement(position);
+	
+	return;
+}
+
+void population::sendAll(){
+	while(ChromoPopulation.size()!=0) {
+		this->sendChromossome(true, 0, 0);
+	}
+	return;
+}
+
+void population::distribPop(){
+	int*sendElement;
+	int position;
+	int popNumber=GA_POPSIZE;
+	for(int y=0; y<(GA_POPSIZE/3); y++){//send pop elements to first process
+		position=std::rand() % popNumber;
+		this->sendChromossome(false, position, 1);
+		popNumber--;
+	}
+	for(int z=0; z<(GA_POPSIZE/3); z++){//send pop elements to second process
+		position=std::rand() % popNumber;
+		this->sendChromossome(false, position, 2);
+		popNumber--;
+	}
+	return;
+}
+
+void population::receivePopPart(){
+	for(int q=0; q<(GA_POPSIZE/3); q++){//send pop elements to second process
+		this->receiveOutsideChromossome(false);
+	}
+	return;
+}

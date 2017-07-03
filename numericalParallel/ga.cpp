@@ -140,12 +140,13 @@ int main(int argc, char *argv[]){
         //-----------------------------------------------------------------------------------------------
         
         //Broadcast the champion rank number to the machines, so they know if they send the champion over
-        int ch_number=ch.at(0).arr[0];//CHANGE IT LATER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        int ch_number=ch.at(1).arr[0];//CHANGE IT LATER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         MPI_Bcast( &ch_number, 1, MPI_INT, 0, MPI_COMM_WORLD);
 		int m=0;
 		if(ch_number!=world_rank){
 			//receive the champion
 			m=1;
+			//just test string receive--------------------------------------------------------
 			MPI_Status status;
 			MPI_Probe(MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
 			int l;
@@ -156,35 +157,19 @@ int main(int argc, char *argv[]){
 			string champ_aux(buf, l);
 			delete [] buf;
 			cout<<champ_aux;
-			int *values_champ=new int[NUMBERVARIABLES+1];
-			MPI_Recv(values_champ, NUMBERVARIABLES+1, MPI_INT, MPI_ANY_SOURCE,  MPI_ANY_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-			chromossome*newChamp=new chromossome(values_champ, true);
-			delete [] values_champ;
-			//cout<<newChamp->getString();
-			//add the champion to the beggining of the list
-			pop->addChromossomeBeginning(*newChamp);
-			//free the memory
-			delete newChamp;
-		}else cout<<"Im the master and im the champion holder!\n";
+			//--------------------------------------------------------------------------------
+			pop->receiveOutsideChromossome(true);
+		}else{
+			m=0;
+			cout<<"Im the master and im the champion holder!\n";
+		} 
 		MPI_Barrier(MPI_COMM_WORLD); //we are sure now that the master has the champion for sure 
 		//receive all pop elements of slaves
-		int receives=0;
-		int *values_champEle;
-		chromossome*newChampEle;
-		while(receives!=(((GA_POPSIZE/3)*2)-m)) {
-			values_champEle=new int[NUMBERVARIABLES+1];
-			MPI_Recv(values_champEle, NUMBERVARIABLES+1, MPI_INT, MPI_ANY_SOURCE,  MPI_ANY_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-			newChampEle=new chromossome(values_champEle, true);
-			delete [] values_champEle;
-			//add the champion to the beggining of the list
-			pop->addChromossome(*newChampEle);
-			//free the memory
-			delete newChampEle;
-			receives++;
-		}
+		pop->receiveAllChromossomes(m);
 		//has now all elements
 		MPI_Barrier(MPI_COMM_WORLD);
 		pop->printPopulation(); //Master now has all the population
+		cout<<"-------------------------------------------------------\n";
 	}else{
 		//send champions fitnesses
 		MPI_Send(champ, 2, MPI_INT, 0, 0, MPI_COMM_WORLD);
@@ -192,25 +177,15 @@ int main(int argc, char *argv[]){
 		int champ_rank;
 		MPI_Bcast(&champ_rank, 1, MPI_INT, 0, MPI_COMM_WORLD);
 		if(champ_rank==world_rank){//sends the champ over
+			//teste string send---------------------------------------------------------------------------------
 			string champ_string="Thanks for the tip! Im the champion older! ["+to_string(world_rank)+"]\n";
 			MPI_Send(champ_string.c_str(), champ_string.length(), MPI_CHAR, 0, 0, MPI_COMM_WORLD);
-			int*sendVec=pop->codifChamp();
-			MPI_Send(sendVec, NUMBERVARIABLES+1, MPI_INT, 0, 0, MPI_COMM_WORLD);
-			delete [] sendVec;
-			//delete champion from pop
-			pop->deleteFirst();
+			//--------------------------------------------------------------------------------------------------
+			pop->sendChromossome(true, 0, 0);
 		}
 		MPI_Barrier(MPI_COMM_WORLD);//knows now that master has the champion
 		//send all population elements
-		int*sendVecEle;
-		while(pop->getList().size()!=0) {
-			sendVecEle=pop->codifChamp();
-			MPI_Send(sendVecEle, NUMBERVARIABLES+1, MPI_INT, 0, 0, MPI_COMM_WORLD);
-			delete [] sendVecEle;
-			//delete sent element from pop
-			pop->deleteFirst();
-		}
-		
+		pop->sendAll();
 		MPI_Barrier(MPI_COMM_WORLD);
 		//pop->printPopulation(); //Slaves have now zero pop
 	}	
@@ -218,53 +193,20 @@ int main(int argc, char *argv[]){
 	
 	//distribute the pop
 	if(world_rank==0){//send pop elements
-		int*sendElement;
-		int position;
-		int popNumber=GA_POPSIZE;
-		for(int y=0; y<(GA_POPSIZE/3); y++){//send pop elements to first process
-			position=std::rand() % popNumber;
-			sendElement=pop->codifElement(position);
-			MPI_Send(sendElement, NUMBERVARIABLES+1, MPI_INT, 1, 0, MPI_COMM_WORLD);
-			delete [] sendElement;
-			//delete champion from pop
-			pop->deleteElement(position);
-			popNumber--;
-		}
-		for(int z=0; z<(GA_POPSIZE/3); z++){//send pop elements to second process
-			position=std::rand() % popNumber;
-			sendElement=pop->codifElement(position);
-			MPI_Send(sendElement, NUMBERVARIABLES+1, MPI_INT, 2, 0, MPI_COMM_WORLD);
-			delete [] sendElement;
-			//delete champion from pop
-			pop->deleteElement(position);
-			popNumber--;
-		}
+		pop->distribPop();
 		MPI_Barrier(MPI_COMM_WORLD); //population is now distributed again
-		/*cout<<"\n------------------------\n";
-			pop->printPopulation();*/
+		cout<<"\n------------------------\n";
+			pop->printPopulation();
 	}else{//receive pop elements
-		int*rcvElement;
-		chromossome*newElemente;
-		for(int q=0; q<(GA_POPSIZE/3); q++){//send pop elements to second process
-			rcvElement=new int[NUMBERVARIABLES+1];
-			MPI_Recv(rcvElement, NUMBERVARIABLES+1, MPI_INT, 0,  MPI_ANY_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-			newElemente=new chromossome(rcvElement, true);
-			delete [] rcvElement;
-			//add the champion to the beggining of the list
-			pop->addChromossome(*newElemente);
-			//free the memory
-			delete newElemente;
-		}
+		pop->receivePopPart();
 		MPI_Barrier(MPI_COMM_WORLD); //population is now distributed again
-		/*if(world_rank==2){//send pop elements to second process
+		/*if(world_rank==1){//send pop elements to second process
 			cout<<"\n------------------------\n";
 			pop->printPopulation();
 		}*/
 	}
-	
 	/*
-	fitness_check=pop->getElement(0).getFitness();
-	while(pop->getElement(0).getFitness()!=0){
+	while(/* stop condition){
 		pop->evolvePop();
 		pop->calcPopFitness();
 		pop->popSort();
