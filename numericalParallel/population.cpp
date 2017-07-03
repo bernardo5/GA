@@ -18,7 +18,7 @@ population::population(){
 
 population::population(bool newIteration){
 	if(newIteration){
-		this->population_size=GA_POPSIZE;
+		this->population_size=GA_POPSIZE/3;
 		ChromoPopulation.clear();
 	}else{
 		cout<<"Unspecified context\n";
@@ -67,7 +67,7 @@ chromossome *population::tournamentSelection(){
 	int i;
 	chromossome*addC;
 	for ( i = 0; i < TOURNAMENTSIZE; i++) {
-        int randomId = (int) (std::rand() % GA_POPSIZE);
+        int randomId = (int) (std::rand() % (GA_POPSIZE/3));
         addC=cloneChromossome(this->getElement(randomId));
         tournamentPop->addChromossome(*addC);
         delete addC;
@@ -149,16 +149,14 @@ void population::evolvePop(){
     }
     //mutate population
     newPop->mutate();
-    
     //clear previous list and assign to new one
     this->cleanup();
-	while(ChromoPopulation.size()!=GA_POPSIZE) {
+	while(ChromoPopulation.size()!=(GA_POPSIZE/3)) {
 		chromossome*n=cloneChromossome(newPop->getElement(0));
         this->addChromossome(*n);
         delete n;
-        this->deleteFirst();
+        newPop->deleteFirst();
     }
-    
     delete newPop;
 	return;
 }

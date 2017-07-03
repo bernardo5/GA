@@ -10,6 +10,25 @@
 //using expressions
 using namespace std;
 
+void printAllPops(int world_rank, population*pop){		
+	if(world_rank==0){		
+		cout<<"Master pop\n";
+		pop->printPopulation();
+		MPI_Barrier(MPI_COMM_WORLD);
+		MPI_Barrier(MPI_COMM_WORLD);
+	}else if(world_rank==1){		
+		MPI_Barrier(MPI_COMM_WORLD);
+		cout<<"Slave1 pop\n";
+		pop->printPopulation();
+		MPI_Barrier(MPI_COMM_WORLD);
+	}else{		
+		MPI_Barrier(MPI_COMM_WORLD);
+		MPI_Barrier(MPI_COMM_WORLD);
+		cout<<"Slave2 pop\n";
+		pop->printPopulation();
+	}
+	return;
+}
 
 
 void writeFile(int*finalSequence, string final_time){
@@ -68,8 +87,9 @@ int handleFittest(int * champ){
     ch.push_back(p2);
         
     sort(ch.begin(), ch.end()); //compute the champion of all champions
-    
-    return  ch.at(0).arr[0];    
+    int returnInt=ch.at(0).arr[0];
+    ch.clear();
+    return returnInt;    
 }
 
 void champSync(int world_rank, population*pop){		
@@ -92,7 +112,7 @@ void champSync(int world_rank, population*pop){
 		pop->receiveAllChromossomes(m);
 		//has now all elements
 		MPI_Barrier(MPI_COMM_WORLD);
-		pop->printPopulation(); //Master now has all the population
+		//pop->printPopulation(); //Master now has all the population
 		cout<<"-------------------------------------------------------\n";
 	}else{
 		//send champions fitnesses
@@ -149,10 +169,8 @@ int main(int argc, char *argv[]){
 	//initialize rand parameter
 	srand(world_rank+1);
 	
-	if(world_rank==0){
-		//start counting clock
-		auto start_time = std::chrono::high_resolution_clock::now();
-	}
+	//start counting clock
+	auto start_time = std::chrono::high_resolution_clock::now();
 	
 	population *pop=new population();
 	pop->calcPopFitness();
@@ -161,34 +179,40 @@ int main(int argc, char *argv[]){
 	//distribute the pop
 	distributePop(world_rank, pop);
 	//if(world_rank==0)pop->printPopulation();
-	/*
-	while(/* stop condition){
+	int iteration=1;
+	while(true/* stop condition*/){
+		pop->popSort();
+		if(world_rank==0)
+			if(print==1)
+				cout<<"\nBest string fit in ("+to_string(i)+") iteration: "+string(pop->getElement(0).getString())+"\n";
+		//if(world_rank==2)pop->printPopulation();
 		pop->evolvePop();
 		pop->calcPopFitness();
 		pop->popSort();
+		MPI_Barrier(MPI_COMM_WORLD);
+		champSync(world_rank, pop);
+		if(world_rank==0)
+			if(pop->getElement(0).getFitness()==0)break;
 		
-		if(fitness_check<(pop->getElement(0).getFitness())){
-			cout<<"Error in elitism\n";
-			cout<<"---------------------------\nPrinting after sort...\n";
-			pop->printPopulation();
-			cout<<"\n-------------------------------------------\n";
-			exit(1);
-		}else{
-			if(fitness_check>(pop->getElement(0).getFitness()))
-				fitness_check=(pop->getElement(0).getFitness());
-		}
-		if(print==1)cout<<"\nBest string fit in ("+to_string(i)+") iteration: "+string(pop->getElement(0).getString())+"\n";
-		i++;
+		distributePop(world_rank, pop);
+		/*printAllPops(world_rank, pop);
+		break;*/
+		iteration++;
 	}
-	if(print==1)cout<<"\nGA algorithms work!\n";
-	//end of GA algorithm and stop counting time
-	auto end_time = std::chrono::high_resolution_clock::now();
-	auto time = end_time - start_time;
-	if(print==1)std::cout << "It took " <<
-    std::chrono::duration_cast<std::chrono::milliseconds>(time).count() << " milliseconds to run.\n";
-    writeFile(pop->getElement(0).getValues(), to_string(std::chrono::duration_cast<std::chrono::milliseconds>(time).count()));
+	if(world_rank==0)
+			if(print==1)
+				cout<<"\nBest string fit in ("+to_string(i)+") iteration: "+string(pop->getElement(0).getString())+"\n";
+	if(world_rank==0){
+		 if(print==1)cout<<"\nGA algorithms work!\n";
+		//end of GA algorithm and stop counting time
+		auto end_time = std::chrono::high_resolution_clock::now();
+		auto time = end_time - start_time;
+		if(print==1)std::cout << "It took " <<
+		std::chrono::duration_cast<std::chrono::milliseconds>(time).count() << " milliseconds to run.\n";
+		//writeFile(pop->getElement(0).getValues(), to_string(std::chrono::duration_cast<std::chrono::milliseconds>(time).count()));
+	}
 	pop->cleanup();
-	delete pop;*/
+	delete pop;
 	MPI_Finalize();
 	return 0;
 }
