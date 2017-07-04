@@ -244,12 +244,16 @@ void population::distribPop(){
 	int position;
 	int popNumber=GA_POPSIZE;
 	for(int y=0; y<(GA_POPSIZE/3); y++){//send pop elements to first process
-		position=std::rand() % popNumber;
+		do{
+			position=std::rand() % popNumber;
+		}while(position==0);
 		this->sendChromossome(false, position, 1);
 		popNumber--;
 	}
 	for(int z=0; z<(GA_POPSIZE/3); z++){//send pop elements to second process
-		position=std::rand() % popNumber;
+		do{
+			position=std::rand() % popNumber;
+		}while(position==0);
 		this->sendChromossome(false, position, 2);
 		popNumber--;
 	}
