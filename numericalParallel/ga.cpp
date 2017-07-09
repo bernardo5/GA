@@ -190,18 +190,19 @@ int main(int argc, char *argv[]){
 	//if(world_rank==0)pop->printPopulation();
 	int iteration=1;
 	while(true/* stop condition*/){
-		pop->popSort();
-		pop->evolvePop();
-		pop->calcPopFitness();
-		pop->popSort();
 		MPI_Barrier(MPI_COMM_WORLD);
 		champSync(world_rank, pop);
-		
 		if(cycleBreak(world_rank, pop)) break;
-		
+		//all elements are in the master now
+		if(world_rank==0) pop->evolvePop();
+		MPI_Barrier(MPI_COMM_WORLD);
 		distributePop(world_rank, pop);
-		/*printAllPops(world_rank, pop);
-		break;*/
+		//pop distributed again
+		//mutate population
+		pop->mutate();
+		pop->calcPopFitness();
+		pop->popSort();
+		
 		iteration++;
 	}
 	if(world_rank==0)

@@ -127,31 +127,26 @@ void population::evolvePop(){
 	//by default it is considered eleitism
 	population *newPop=new population(true);
 	//initialize new population with fitest member of previous pop
+	
 	chromossome fittest(this->getElement(0).getValues(), false);
 	newPop->addChromossome(fittest);
-	/*cout<< "The best is: ";
-	for(int k=0; k<	NUMBERVARIABLES; k++)
-		cout<<to_string((newPop->getElement(0).getValues())[k])+", ";
-	cout<<"\n";*/
 	//evolve population through crossover
 	int i;
-	for (i = 1; i < this->getSize(); i++) {
-        chromossome *indiv1 = this->tournamentSelection();
-        chromossome *indiv2 = this->tournamentSelection();
-        chromossome *newIndiv = this->crossover(*indiv1, *indiv2);
-        indiv1->deleteVector();
-        delete indiv1;
-        indiv2->deleteVector();
-        delete indiv2;
-        newPop->addChromossome(*newIndiv);
-        //newIndiv->deleteVector();
-        delete newIndiv;
-    }
-    //mutate population
-    newPop->mutate();
+	for (i = 1; i < GA_POPSIZE; i++){
+		chromossome *indiv1 = this->tournamentSelection();
+		chromossome *indiv2 = this->tournamentSelection();
+		chromossome *newIndiv = this->crossover(*indiv1, *indiv2);
+		indiv1->deleteVector();
+		delete indiv1;
+		indiv2->deleteVector();
+		delete indiv2;
+		newPop->addChromossome(*newIndiv);
+		//newIndiv->deleteVector();
+		delete newIndiv;
+	}
     //clear previous list and assign to new one
     this->cleanup();
-	while(ChromoPopulation.size()!=(GA_POPSIZE/3)) {
+	while(ChromoPopulation.size()!=(GA_POPSIZE)) {
 		chromossome*n=cloneChromossome(newPop->getElement(0));
         this->addChromossome(*n);
         delete n;
