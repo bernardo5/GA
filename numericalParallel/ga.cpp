@@ -191,10 +191,6 @@ int main(int argc, char *argv[]){
 	int iteration=1;
 	while(true/* stop condition*/){
 		pop->popSort();
-		if(world_rank==0)
-			//if(print==1)
-				//cout<<"\nBest string fit in ("+to_string(i)+") iteration: "+string(pop->getElement(0).getString())+"\n";
-		//if(world_rank==2)pop->printPopulation();
 		pop->evolvePop();
 		pop->calcPopFitness();
 		pop->popSort();
